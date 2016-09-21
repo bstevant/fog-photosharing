@@ -5,7 +5,8 @@ import uuid, time
 photo1 = {
     'uuid': '0be9c1e3-ae5e-4abc-aa08-d64ad01abe37',
     'url': '03082005.jpg',
-    'timestamp': '1123583543'
+    'timestamp': '1123583543',
+    'description': 'Cheese guitar !'
 }
 
 album1 = {
@@ -81,6 +82,28 @@ def get_albums(uid):
         abort(404)
 
 ####################################################################
+# Route PUT /albums/<uuid>
+# Returns updated album
+@app.route('/albums/<string:uid>', methods=['PUT'])
+def update_album(uid):
+    if not request.json \
+       or not 'name' in request.json \
+       or not 'photos' in request.json:
+        abort(400)
+    q = Query()
+    a = albums.search(q.uuid == uid)
+    if len(a) == 0:
+        abort(404)
+    album = {
+        'uuid': uid,
+        'name': request.json['name'],
+        'photos': request.json['photos']
+    }
+    albums.update(album, q.uuid == uid)
+    return jsonify({'albums': album})
+
+
+####################################################################
 # Route GET /photos/
 # Returns list of photos
 @app.route('/photos', methods=['GET'])
@@ -96,10 +119,13 @@ def create_photo():
         abort(400)
     if not 'timestamp' in request.json:
         request.json['timestamp'] = str(int(time.time())) 
+    if not 'description' in request.json:
+        request.json['description'] = ''
     photo = {
         'uuid': create_uniq_uid(photos),
         'url': request.json['url'],
-        'timestamp': request.json['timestamp']
+        'timestamp': request.json['timestamp'],
+        'description': request.json['description']
     }
     photos.insert(photo)
     return jsonify({'photos': photo})
@@ -116,11 +142,35 @@ def get_photos(uid):
     if len(p) == 0:
         abort(404)
 
+####################################################################
+# Route PUT /photos/<uuid>
+# Returns updated photo
+@app.route('/photos/<string:uid>', methods=['PUT'])
+def update_photo(uid):
+    if not request.json \
+       or not 'description' in request.json :
+        abort(400)
+    q = Query()
+    p = photos.search(q.uuid == uid)
+    if len(p) == 0:
+        abort(404)
+    p1 = p[0]
+    photo = {
+        'uuid': uid,
+        'url': p1['url'],
+        'timestamp': p1['timestamp'],
+        'description': request.json['description']
+    }
+    photos.update(photo, q.uuid == uid)
+    return jsonify({'photos': photo})
+
+
+####################################################################
+####################################################################
 if __name__ == '__main__':
     #photos.insert(photo1)    
     #albums.insert(album1)    
     app.run(host='0.0.0.0', port=5000, debug=True)
     #app.run(host='::', port=5000)
-
 
 
