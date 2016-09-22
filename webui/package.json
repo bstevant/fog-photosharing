@@ -1,7 +1,7 @@
 {
     "author": "Bruno STEVANT",
-    "name": "photohub",
-    "description": "PhotoHub Service",
+    "name": "photoshare-webui",
+    "description": "PhotoShare Service WebUI",
     "version": "1.0.0",
     "homepage": "https://github.com/bstevant/fog-photosharing",
     "repository": {
@@ -11,11 +11,12 @@
         "node": ">=0.6.2"
     },
     "dependencies": {
-        "ejs": "2.0.8",
-        "express": "4.10.7",
-        "underscore": "1.8.3"
+        "nanogallery": ">=5.10.3",
+        "express": ">=4.10.7",
+        "underscore": ">=1.8.3",
+        "pug": ">=2.0.0-beta6"
     },
     "scripts": {
-        "start": "node app.js"
+        "start": "node webui.js"
     }
 }
