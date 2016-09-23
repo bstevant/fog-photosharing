@@ -4,9 +4,14 @@ var express = require('express'),
     host = "::";
 
 var app = express();
-app.use('/photohub', require('./photohub.js')({
+app.use('/photos', require('./photohub.js')({
     staticFiles : 'resources/photos',
-    urlRoot : 'photohub',
+    urlRoot : 'photos',
+    title : 'Example Gallery',
+}));
+app.use('/thumbs', require('./photohub.js')({
+    staticFiles : 'resources/thumbs',
+    urlRoot : 'thumbs',
     title : 'Example Gallery',
 }));
 
@@ -16,4 +21,4 @@ app.use('/photohub', require('./photohub.js')({
 
 app.listen(port, host);
 host = host || 'localhost';
-console.log('node-gallery listening on ' + host  + ':' + port);
+console.log('PhotoHub listening on ' + host  + ':' + port);

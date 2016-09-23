@@ -1,0 +1,15 @@
+version: '2'
+
+services:
+    metahub:
+        build: ./metahub
+        ports: 
+            - "5000:5000"
+    photohub:
+        build: ./photohub
+        ports:
+            - "3000:3000"
+    webui:
+        build: ./webui
+        ports:
+            - "8080:8080"

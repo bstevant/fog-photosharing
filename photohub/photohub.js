@@ -8,9 +8,11 @@ module.exports = function(config){
     staticFiles = config.staticFiles,
     common = require('./common')(config);
 
-    app.get(/.+(\.(jpg|bmp|jpeg|gif|png|tif)(\?tn=(1|0))?)$/i, function(req, res, next){
+    app.get(/.+\.(jpg|bmp|jpeg|gif|png|tif)$/i, function(req, res, next){
         var filePath = path.join(staticFiles, req.path),
         fstream;
+
+        console.log("Gor request for " + config.urlRoot + req.path);
 
         filePath = decodeURI(filePath);
 
@@ -27,8 +29,15 @@ module.exports = function(config){
         });
     });
     
-    app.put(/.+(\.(jpg|bmp|jpeg|gif|png|tif)(\?tn=(1|0))?)$/i, function(req, res, next){
-        var pathArray = req.files.image.path.split( '/' );
+    app.put(/.+\.(jpg|bmp|jpeg|gif|png|tif)$/i, function(req, res, next){
+        tempPath = req.files.displayImage.path
+        fs.readFile(tempPath, function (err, data) {
+          // ...
+          var newPath = __dirname + "/uploads/uploadedFileName";
+          fs.writeFile(newPath, data, function (err) {
+            res.redirect("back");
+          });
+        });
     });
     
     return app;
