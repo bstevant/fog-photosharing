@@ -9,6 +9,10 @@ services:
         build: ./photohub
         ports:
             - "3000:3000"
+    thumbhub:
+        build: ./thumbhub
+        ports:
+            - "3050:3050"
     webui:
         build: ./webui
         ports:

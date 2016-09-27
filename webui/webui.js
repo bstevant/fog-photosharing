@@ -31,7 +31,7 @@ app.get('/', function (req, res) {
 });
 
 // Proxy photo requests to photohub
-app.get(/(photos|thumbs)\/.+\.jpg|bmp|jpeg|gif|png|tif$/i, function (req, res) {
+app.get(/photos\/.+\.jpg|bmp|jpeg|gif|png|tif$/i, function (req, res) {
     var options= {
         host: 'photohub',
         port: '3000',
@@ -55,6 +55,31 @@ app.get(/(photos|thumbs)\/.+\.jpg|bmp|jpeg|gif|png|tif$/i, function (req, res) {
     }).end();
 });
 
+
+// Proxy thumbs requests to thumbhub
+app.get(/thumbs\/.+\.jpg|bmp|jpeg|gif|png|tif$/i, function (req, res) {
+    var options= {
+        host: 'thumbhub',
+        port: '3050',
+        path: req.path
+    }
+    console.log("Proxying request to http://thumbhub:3050"+req.path);
+    http.request(options, function (response) {
+        response.on('data', function (chunk) { res.write(chunk); });
+        response.on('end', function () {
+            //res.writeHead(response.statusCode);
+            res.end();
+        });
+        response.on('close', function(){
+            //res.writeHead(response.statusCode);
+            res.end();
+        });
+    }).on('error', function(e) {
+        console.log(e.message);
+        res.writeHead(500);
+        res.end();
+    }).end();
+});
 
 app.listen(port, host);
 console.log('WebUI listening on ' + host  + ':' + port);
