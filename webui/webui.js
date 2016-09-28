@@ -2,15 +2,10 @@ var express = require('express'),
     port = 8080,
     host = "::";
 var fs = require('fs');
-var http = require('http');
+var request = require('request');
 
 render_photos = function(res) {
-    var options= {
-        host: 'metahub',
-        port: '5000',
-        path: '/photos'
-    }
-    http.request(options, function (response) {
+    request("http://metahub:5000/photos").on('response', function(response) {
         var str = '';
         response.on('data', function (chunk) { str += chunk; });
         response.on('end', function () {
@@ -33,13 +28,8 @@ app.get('/', function (req, res) {
 
 // Proxy photo requests to photohub
 app.get(/photos\/.+\.jpg|bmp|jpeg|gif|png|tif$/i, function (req, res) {
-    var options= {
-        host: 'photohub',
-        port: '3000',
-        path: req.path
-    }
     console.log("Proxying request to http://photohub:3000"+req.path);
-    http.request(options, function (response) {
+    request("http://photohub:3000"+req.path).on('response', function(response) {
         response.on('data', function (chunk) { res.write(chunk); });
         response.on('end', function () {
             //res.writeHead(response.statusCode);
@@ -89,7 +79,7 @@ app.get(/thumbs\/.+\.jpg|bmp|jpeg|gif|png|tif$/i, function (req, res) {
         path: req.path
     }
     console.log("Proxying request to http://thumbhub:3050"+req.path);
-    http.request(options, function (response) {
+    request("http://thumbhub:3050"+req.path).on('response', function(response) {
         response.on('data', function (chunk) { res.write(chunk); });
         response.on('end', function () {
             //res.writeHead(response.statusCode);
