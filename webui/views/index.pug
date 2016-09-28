@@ -4,8 +4,9 @@ html
     h1= message
     div(id="NG1")
       each photo in photolist
-        a(href="photos/"+photo["url"] data-ngthumb="thumbs/"+photo["url"] data-ngdesc=photo["description"]) #{photo["description"]}
+        a(href="photos/"+photo["url"] data-ngthumb="thumbs/"+photo["url"] data-ngdesc=photo["description"]) 
         | 
     |<script>
     include ng1.js
     |</script>
+    form(action="/photos" class="dropzone" id="photo-dropzone")

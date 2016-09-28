@@ -1,6 +1,7 @@
 var express = require('express'),
     port = 8080,
     host = "::";
+var fs = require('fs');
 var http = require('http');
 
 render_photos = function(res) {
@@ -55,6 +56,27 @@ app.get(/photos\/.+\.jpg|bmp|jpeg|gif|png|tif$/i, function (req, res) {
     }).end();
 });
 
+app.post("/photos", function (req, res) {
+    var options= {
+        host: 'photohub',
+        port: '3000',
+        path: req.path
+    }
+    console.log("Proxying POST request to http://photohub:3000/photos");
+    var multiparty = require('multiparty');
+    var form = new multiparty.Form();
+    form.on('file', function(name,file){
+        tempPath = file.path
+        origName = file.originalFilename
+        console.log(tempPath);
+        fs.stat(tempPath,function (err, stats) {
+            console.log(stats.ctime);
+        });
+        res.redirect("/");
+    });
+    form.parse(req);
+});
+
 
 // Proxy thumbs requests to thumbhub
 app.get(/thumbs\/.+\.jpg|bmp|jpeg|gif|png|tif$/i, function (req, res) {
@@ -80,6 +102,9 @@ app.get(/thumbs\/.+\.jpg|bmp|jpeg|gif|png|tif$/i, function (req, res) {
         res.end();
     }).end();
 });
+
+
+
 
 app.listen(port, host);
 console.log('WebUI listening on ' + host  + ':' + port);

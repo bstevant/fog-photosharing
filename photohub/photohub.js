@@ -8,6 +8,12 @@ module.exports = function(config){
     staticFiles = config.staticFiles,
     common = require('./common')(config);
 
+    app.use(function(req, res, next) {
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Cache-Control");
+      next();
+    });
+
     app.get(/.+\.(jpg|bmp|jpeg|gif|png|tif)$/i, function(req, res, next){
         var filePath = path.join(staticFiles, req.path),
         fstream;
@@ -29,16 +35,25 @@ module.exports = function(config){
         });
     });
     
-    app.put(/.+\.(jpg|bmp|jpeg|gif|png|tif)$/i, function(req, res, next){
-        tempPath = req.files.displayImage.path
-        fs.readFile(tempPath, function (err, data) {
-          // ...
-          var newPath = __dirname + "/uploads/uploadedFileName";
-          fs.writeFile(newPath, data, function (err) {
-            res.redirect("back");
-          });
+    app.post("/", function(req, res, next){
+        var multiparty = require('multiparty');
+        var form = new multiparty.Form();
+
+        form.on('file', function(name,file){
+            var tempPath = file.path;
+            var origName = encodeURIComponent(file.originalFilename);
+            fs.readFile(tempPath, function (err, data) {
+                var newPath = __dirname + "/" + config.staticFiles + origName;
+                fs.writeFile(newPath, data, function (err) {
+                    console.log("Error Writing file at " + newPath);
+                    res.redirect("/");
+                });
+            });
+            console.log("Successfully saved new photo " + origName);
+            res.redirect("/");
         });
+        form.parse(req);
     });
-    
+
     return app;
 }
