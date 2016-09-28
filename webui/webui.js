@@ -66,12 +66,15 @@ app.post("/photos", function (req, res) {
     var multiparty = require('multiparty');
     var form = new multiparty.Form();
     form.on('file', function(name,file){
-        tempPath = file.path
-        origName = file.originalFilename
-        console.log(tempPath);
+        var tempPath = file.path;
+        var origName = file.originalFilename;
+        var creationDate = Date.now();
         fs.stat(tempPath,function (err, stats) {
-            console.log(stats.ctime);
+            if (!err) {
+                creationDate = stats.ctime.getTime();
+            }
         });
+        console.log(creationDate);
         res.redirect("/");
     });
     form.parse(req);
