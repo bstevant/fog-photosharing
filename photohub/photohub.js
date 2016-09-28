@@ -20,7 +20,7 @@ module.exports = function(config){
 
         console.log("Got request for " + config.urlRoot + req.path);
 
-        filePath = decodeURI(filePath);
+        //filePath = decodeURI(filePath);
 
         fs.stat(filePath, function(err){
             if (err){

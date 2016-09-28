@@ -169,7 +169,7 @@ def update_photo(uid):
 ####################################################################
 ####################################################################
 if __name__ == '__main__':
-    photos.insert(photo1)    
+    #photos.insert(photo1)    
     #albums.insert(album1)    
     #app.run(host='0.0.0.0', port=5000, debug=True)
     app.run(host='::', port=5000)

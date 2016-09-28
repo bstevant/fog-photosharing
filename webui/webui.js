@@ -26,8 +26,31 @@ app.get('/', function (req, res) {
     render_photos(res)
 });
 
+
+// Proxy thumbs requests to thumbhub
+app.get(/thumbs\/.+(\.(png|jpg|bmp|jpeg|gif|tif))$/i, function (req, res) {
+    console.log("Proxying request to http://thumbhub:3050"+req.path);
+    request("http://thumbhub:3050"+req.path).on('response', function(response) {
+        response.on('data', function (chunk) { res.write(chunk); });
+        response.on('end', function () {
+            //res.writeHead(response.statusCode);
+            res.end();
+        });
+        response.on('close', function(){
+            //res.writeHead(response.statusCode);
+            res.end();
+        });
+    }).on('error', function(e) {
+        console.log(e.message);
+        res.writeHead(500);
+        res.end();
+    }).end();
+});
+
+
+
 // Proxy photo requests to photohub
-app.get(/photos\/.+\.jpg|bmp|jpeg|gif|png|tif$/i, function (req, res) {
+app.get(/photos\/.+(\.(jpg|bmp|jpeg|gif|png|tif))$/i, function (req, res) {
     console.log("Proxying request to http://photohub:3000"+req.path);
     request("http://photohub:3000"+req.path).on('response', function(response) {
         response.on('data', function (chunk) { res.write(chunk); });
@@ -76,51 +99,26 @@ app.post("/photos", function (req, res) {
                 console.log("Failed to upload description to Metahub!:" + origName);
             }
                 console.log("Successfully uploaded description to Metahub: " + origName);
+
+                var formData = {
+                    custom_file: {
+                        value: fs.createReadStream(tempPath),
+                        options: {
+                            filename: origName
+                        }
+                    }
+                }
+                request.post({url: "http://photohub:3000/photos", formData: formData}, function (err, resp, body){
+                    if (err) {
+                        console.log("Failed to upload image to Photohub!:" + origName);
+                    }
+                    console.log("Successfully uploaded photo to Photohub: " + origName);
+                    res.redirect("/");
+                });
         });
 
-        var formData = {
-            custom_file: {
-                value: fs.createReadStream(tempPath),
-                options: {
-                    filename: origName
-                }
-            }
-        }
-        request.post({url: "http://photohub:3000/photos", formData: formData}, function (err, resp, body){
-            if (err) {
-                console.log("Failed to upload image to Photohub!:" + origName);
-            }
-            console.log("Successfully uploaded photo to Photohub: " + origName);
-        });
-        res.redirect("/");
     });
     form.parse(req);
-});
-
-
-// Proxy thumbs requests to thumbhub
-app.get(/thumbs\/.+\.jpg|bmp|jpeg|gif|png|tif$/i, function (req, res) {
-    var options= {
-        host: 'thumbhub',
-        port: '3050',
-        path: req.path
-    }
-    console.log("Proxying request to http://thumbhub:3050"+req.path);
-    request("http://thumbhub:3050"+req.path).on('response', function(response) {
-        response.on('data', function (chunk) { res.write(chunk); });
-        response.on('end', function () {
-            //res.writeHead(response.statusCode);
-            res.end();
-        });
-        response.on('close', function(){
-            //res.writeHead(response.statusCode);
-            res.end();
-        });
-    }).on('error', function(e) {
-        console.log(e.message);
-        res.writeHead(500);
-        res.end();
-    }).end();
 });
 
 

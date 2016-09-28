@@ -6,7 +6,9 @@ html
       each photo in photolist
         a(href="photos/"+photo["url"] data-ngthumb="thumbs/"+photo["url"] data-ngdesc=photo["description"]) 
         | 
+    div(id="dz")
+      form(action="/photos" id="photodropzone" class="dropzone")
     |<script>
     include ng1.js
+    include dropzone.js
     |</script>
-    form(action="/photos" class="dropzone" id="photo-dropzone")
