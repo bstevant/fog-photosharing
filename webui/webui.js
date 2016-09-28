@@ -52,7 +52,6 @@ app.post("/photos", function (req, res) {
         port: '3000',
         path: req.path
     }
-    console.log("Proxying POST request to http://photohub:3000/photos");
     var multiparty = require('multiparty');
     var form = new multiparty.Form();
     form.on('file', function(name,file){
@@ -64,7 +63,35 @@ app.post("/photos", function (req, res) {
                 creationDate = stats.ctime.getTime();
             }
         });
-        console.log(creationDate);
+        request({ 
+            url: "http://metahub:5000/photos",
+            method: 'POST',
+            json: {
+                'url': encodeURIComponent(origName),
+                'timestamp': creationDate,
+                'description': origName
+            }
+        }, function (err, resp, body){
+            if (err) {
+                console.log("Failed to upload description to Metahub!:" + origName);
+            }
+                console.log("Successfully uploaded description to Metahub: " + origName);
+        });
+
+        var formData = {
+            custom_file: {
+                value: fs.createReadStream(tempPath),
+                options: {
+                    filename: origName
+                }
+            }
+        }
+        request.post({url: "http://photohub:3000/photos", formData: formData}, function (err, resp, body){
+            if (err) {
+                console.log("Failed to upload image to Photohub!:" + origName);
+            }
+            console.log("Successfully uploaded photo to Photohub: " + origName);
+        });
         res.redirect("/");
     });
     form.parse(req);

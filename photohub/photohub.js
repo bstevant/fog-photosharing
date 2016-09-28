@@ -43,14 +43,16 @@ module.exports = function(config){
             var tempPath = file.path;
             var origName = encodeURIComponent(file.originalFilename);
             fs.readFile(tempPath, function (err, data) {
-                var newPath = __dirname + "/" + config.staticFiles + origName;
+                var newPath = __dirname + "/" + config.staticFiles + "/" + origName;
                 fs.writeFile(newPath, data, function (err) {
-                    console.log("Error Writing file at " + newPath);
+                    if (err) {
+                        console.log("Error Writing file at " + newPath);
+                    } else {
+                        console.log("Successfully saved new photo " + origName);                        
+                    }
                     res.redirect("/");
                 });
             });
-            console.log("Successfully saved new photo " + origName);
-            res.redirect("/");
         });
         form.parse(req);
     });

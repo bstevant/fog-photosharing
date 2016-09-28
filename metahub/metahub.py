@@ -127,6 +127,7 @@ def create_photo():
         'timestamp': request.json['timestamp'],
         'description': request.json['description']
     }
+    print("Created new photo entry uuid: " + photo['uuid'] + "url: " + photo['url'])
     photos.insert(photo)
     return jsonify({'photos': photo})
 
