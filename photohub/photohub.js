@@ -8,12 +8,6 @@ module.exports = function(config){
     staticFiles = config.staticFiles,
     common = require('./common')(config);
 
-    app.use(function(req, res, next) {
-      res.header("Access-Control-Allow-Origin", "*");
-      res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Cache-Control");
-      next();
-    });
-
     app.get(/.+\.(jpg|bmp|jpeg|gif|png|tif)$/i, function(req, res, next){
         var filePath = path.join(staticFiles, req.path),
         fstream;

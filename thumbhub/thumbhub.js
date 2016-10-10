@@ -1,10 +1,27 @@
 var express = require('express'),
 fs = require('fs'),
 path = require('path'),
+url = require('url'),
 request = require('request'),
+dns = require('dns'),
 jimp = require('jimp'),
 tmp = require("tmp"),
 common;
+
+var metahub_srv = "bokeh-metahub.service.consul."
+var photohub_srv = "bokeh-photohub.service.consul."
+var thumbhub_srv = "bokeh-thumbhub.service.consul."
+
+function pickupSRV(name, func) {
+    dns.resolveSrv(name, function (err, results) {
+        if (results instanceof Array) {
+            // Pickup a random result from the different resolved names
+            result = results[Math.floor(Math.random()*results.length)];
+            func(result);
+        }
+    });
+}
+
 
 module.exports = function(config){
     var app = express(),
@@ -25,7 +42,12 @@ module.exports = function(config){
             if (err){
                 console.log("Thumb not found: " + req.path);
                 tmpFile = tmp.fileSync();
-                request('http://photohub:3000/photos/' + filename)
+				pickupSRV(photohub_srv, function(record) {
+					var myurl = url.parse('http://bokeh-photohub.service.consul:3000/photos/' + filename);
+					myurl.hostname = record.name;
+					myurl.port = record.port;
+					console.log('Uploading photo from PhotoHub: '+myurl.format());
+					request({uri: myurl})
                     .on('error', function(err) {
                         console.log("Unable to create thumb: " + req.path);
                         return common.error(req, res, next, 404, 'File not found', err);
@@ -50,6 +72,7 @@ module.exports = function(config){
                             });
                         });
                     }).pipe(fs.createWriteStream(tmpFile.name));
+				});
             } else {
                 fstream = fs.createReadStream(filePath);
                 fstream.on('error', function(err){
