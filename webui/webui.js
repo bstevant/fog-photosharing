@@ -32,7 +32,7 @@ render_template = function(res, tmpl) {
 			response.on('end', function () {
 				var resp = JSON.parse(str);
 				if (resp) {
-					res.render('index', { title: 'Hey', message: 'Hello there!', photolist: resp["photos"]});                
+					res.render(tmpl, { title: 'Hey', message: 'Hello there!', photolist: resp["photos"]});                
 				} else {
 					res.status(500).send('Bad response from Metahub');
 				}
