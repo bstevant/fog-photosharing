@@ -47,11 +47,13 @@ app.set('view engine', 'pug');
 
 // Render full page
 app.get('/', function (req, res) {
-    render_template(res,'index')
+	console.log("Rendering whole page");
+    render_template(res,'index');
 });
 
 // Render div containing list of photos
 app.get('/photos', function (req,res) {
+	console.log("Rendering Photos div");
     render_template(res,'includes/div_ng1')	
 });
 
