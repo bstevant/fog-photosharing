@@ -20,11 +20,12 @@ function pickupSRV(name, func) {
     });
 }
 
-render_photos = function(res) {
+render_template = function(res, tmpl) {
 	pickupSRV(metahub_srv, function(record) {
-		myurl = url.parse("http://bokeh-metahub.service.consul:5000/photos");
+		var myurl = url.parse("http://bokeh-metahub.service.consul:5000/photos");
 		myurl.hostname = record.name;
 		myurl.port = record.port;
+		console.log("Requesting Metahub: "+url.format(myurl));
 		request({uri: myurl}).on('response', function(response) {
 			var str = '';
 			response.on('data', function (chunk) { str += chunk; });
@@ -43,15 +44,22 @@ render_photos = function(res) {
 
 var app = express();
 app.set('view engine', 'pug');
+
+// Render full page
 app.get('/', function (req, res) {
-    render_photos(res)
+    render_template(res,'index')
+});
+
+// Render div containing list of photos
+app.get('/photos', function (req,res) {
+    render_template(res,'includes/div_ng1')	
 });
 
 
 // Proxy thumbs requests to thumbhub
 app.get(/thumbs\/.+(\.(png|jpg|bmp|jpeg|gif|tif))$/i, function (req, res) {
 	pickupSRV(thumbhub_srv, function(record) {
-		myurl = url.parse("http://bokeh-thumbhub.service.consul:3050"+req.path);
+		var myurl = url.parse("http://bokeh-thumbhub.service.consul:3050"+req.path);
 		myurl.hostname = record.name;
 		myurl.port = record.port;
 		console.log("Proxying request to: "+url.format(myurl));
@@ -78,7 +86,7 @@ app.get(/thumbs\/.+(\.(png|jpg|bmp|jpeg|gif|tif))$/i, function (req, res) {
 // Proxy photo requests to photohub
 app.get(/photos\/.+(\.(jpg|bmp|jpeg|gif|png|tif))$/i, function (req, res) {
 	pickupSRV(photohub_srv, function(record) {
-		myurl = url.parse("http://bokeh-photohub.service.dc1.consul:3000"+req.path);
+		var myurl = url.parse("http://bokeh-photohub.service.dc1.consul:3000"+req.path);
 		myurl.hostname = record.name;
 		myurl.port = record.port;
 		console.log("Proxying request to: "+url.format(myurl));
@@ -100,6 +108,8 @@ app.get(/photos\/.+(\.(jpg|bmp|jpeg|gif|png|tif))$/i, function (req, res) {
 	});
 });
 
+
+// Upload a photo
 app.post("/photos", function (req, res) {
 	var multiparty = require('multiparty');
 	var form = new multiparty.Form();
