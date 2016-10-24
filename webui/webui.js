@@ -20,7 +20,7 @@ function pickupSRV(name, func) {
     });
 }
 
-render_template = function(res, tmpl) {
+render_function = function(res, func) {
 	pickupSRV(metahub_srv, function(record) {
 		var myurl = url.parse("http://bokeh-metahub.service.consul:5000/photos");
 		myurl.hostname = record.name;
@@ -32,7 +32,7 @@ render_template = function(res, tmpl) {
 			response.on('end', function () {
 				var resp = JSON.parse(str);
 				if (resp) {
-					res.render(tmpl, { title: 'Hey', message: 'Hello there!', photolist: resp["photos"]});                
+					func(resp["photos"]);
 				} else {
 					res.status(500).send('Bad response from Metahub');
 				}
@@ -48,13 +48,36 @@ app.set('view engine', 'pug');
 // Render full page
 app.get('/', function (req, res) {
 	console.log("Rendering whole page");
-    render_template(res,'index');
+	render_function(res, function(photos) {
+		res.render('index', { title: 'Hey', message: 'Hello there!', photolist: photos});
+	});
 });
 
 // Render div containing list of photos
 app.get('/photos', function (req,res) {
 	console.log("Rendering Photos div");
-    render_template(res,'includes/div_ng1')	
+	render_function(res, function(photos) {
+		res.render('includes/div_ng1', { title: 'Hey', message: 'Hello there!', photolist: photos});
+	});
+});
+
+// Render JSON for nanoGallery
+app.get('/nanoPhotosProvider.php', function (req,res) {
+	console.log("Rendering Photos JSON");
+	table = new Array();
+	render_function(res, function(photos) {
+		for (var i=0; i<photos.length; i++) {
+			e = new Object();
+			e.title = '';
+			e.desc = photo[i]["description"];
+			e.kind = 'image';
+			e.ID = photo[i]["uuid"];
+			e.src = './photos/' + photo[i]["url"];
+			e.srct = './thumbs/' + photo[i]["url"];
+			table.push(e);
+		}
+		return JSON.stringify(table);
+	});
 });
 
 

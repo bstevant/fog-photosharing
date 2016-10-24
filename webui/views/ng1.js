@@ -4,6 +4,8 @@ $(document).ready(function () {
         thumbnailWidth: 'auto',
         thumbnailHeight: 100,
         locationHash: false,
-        thumbnailHoverEffect:'borderLighter,imageScaleIn80'
+        thumbnailHoverEffect:'borderLighter,imageScaleIn80',
+		kind: 'json',
+        jsonProvider: './nanoPhotosProvider.php',
     });
 });
