@@ -32,7 +32,7 @@ render_function = function(res, func) {
 			response.on('end', function () {
 				var resp = JSON.parse(str);
 				if (resp) {
-					func(resp["photos"]);
+					func(res, resp["photos"]);
 				} else {
 					res.status(500).send('Bad response from Metahub');
 				}
@@ -48,16 +48,16 @@ app.set('view engine', 'pug');
 // Render full page
 app.get('/', function (req, res) {
 	console.log("Rendering whole page");
-	render_function(res, function(photos) {
-		res.render('index', { title: 'Hey', message: 'Hello there!', photolist: photos});
+	render_function(res, function(r, photos) {
+		r.render('index', { title: 'Hey', message: 'Hello there!', photolist: photos});
 	});
 });
 
 // Render div containing list of photos
 app.get('/photos', function (req,res) {
 	console.log("Rendering Photos div");
-	render_function(res, function(photos) {
-		res.render('includes/div_ng1', { title: 'Hey', message: 'Hello there!', photolist: photos});
+	render_function(res, function(r, photos) {
+		r.render('includes/div_ng1', { title: 'Hey', message: 'Hello there!', photolist: photos});
 	});
 });
 
@@ -65,7 +65,7 @@ app.get('/photos', function (req,res) {
 app.get('/nanoPhotosProvider.php', function (req,res) {
 	console.log("Rendering Photos JSON");
 	table = new Array();
-	render_function(res, function(photos) {
+	render_function(res, function(r, photos) {
 		for (var i=0; i<photos.length; i++) {
 			e = new Object();
 			e.title = '';
@@ -76,7 +76,8 @@ app.get('/nanoPhotosProvider.php', function (req,res) {
 			e.srct = './thumbs/' + photo[i]["url"];
 			table.push(e);
 		}
-		return JSON.stringify(table);
+		r.setHeader('Content-Type', 'application/json');
+		r.send(JSON.stringify(table));
 	});
 });
 
