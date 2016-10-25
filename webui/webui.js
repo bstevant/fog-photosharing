@@ -77,8 +77,8 @@ app.get('/nanoPhotosProvider.php', function (req,res) {
 			e.desc = photos[i]["description"];
 			e.kind = 'image';
 			e.ID = photos[i]["uuid"];
-			e.src = './photos/' + photos[i]["url"];
-			e.srct = './thumbs/' + photos[i]["url"];
+			e.src = 'photos/' + photos[i]["url"];
+			e.srct = 'thumbs/' + photos[i]["url"];
 			table.push(e);
 		}
 		r.setHeader('Content-Type', 'application/json');
