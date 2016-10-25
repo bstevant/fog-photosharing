@@ -1,7 +1,7 @@
 $(document).ready(function () {
 	$("#NG1").nanoGallery({
 		//itemsBaseURL:'http://localhost:3000',
-		theme:'clean'
+		theme:'clean',
 		thumbnailWidth: 'auto',
 		thumbnailHeight: 100,
 		locationHash: false,
