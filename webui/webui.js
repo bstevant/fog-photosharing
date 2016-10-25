@@ -80,6 +80,8 @@ app.get('/nanoPhotosProvider.php', function (req,res) {
 			e.albumID = '0'
 			e.src = 'photos/' + photos[i]["url"];
 			e.srct = 'thumbs/' + photos[i]["url"];
+			e.imgWidth = 150
+			e.imgHeight = 100
 			table.push(e);
 		}
 		r.setHeader('Content-Type', 'application/json');
