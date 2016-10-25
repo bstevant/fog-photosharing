@@ -73,10 +73,11 @@ app.get('/nanoPhotosProvider.php', function (req,res) {
 	render_function(res, function(r, photos) {
 		for (var i=0; i<photos.length; i++) {
 			e = new Object();
-			e.title = '';
-			e.desc = photos[i]["description"];
+			e.title = photos[i]["description"];
+			e.description = photos[i]["description"];
 			e.kind = 'image';
 			e.ID = photos[i]["uuid"];
+			e.albumID = '0'
 			e.src = 'photos/' + photos[i]["url"];
 			e.srct = 'thumbs/' + photos[i]["url"];
 			table.push(e);
