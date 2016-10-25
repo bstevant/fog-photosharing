@@ -11,13 +11,16 @@ var photohub_srv = "bokeh-photohub.service.consul."
 var thumbhub_srv = "bokeh-thumbhub.service.consul."
 
 function pickupSRV(name, func) {
-    dns.resolveSrv(name, function (err, results) {
-        if (results instanceof Array) {
-            // Pickup a random result from the different resolved names
-            result = results[Math.floor(Math.random()*results.length)];
-            func(result);
-        }
-    });
+	dns.resolveSrv(name, function (err, results) {
+		if (results instanceof Array) {
+			// Pickup a random result from the different resolved names
+			result = results[Math.floor(Math.random()*results.length)];
+			func(result);
+		} else {
+			console.log("Error resolving: " + name);
+			func("");
+		}
+	});
 }
 
 render_function = function(res, func) {
@@ -37,6 +40,8 @@ render_function = function(res, func) {
 					res.status(500).send('Bad response from Metahub');
 				}
 			});
+		}).on('error', function (error) {
+			res.status(500).send('Bad response from Metahub');
 		}).end();
 	});
 };
