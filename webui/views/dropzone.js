@@ -3,7 +3,7 @@ Dropzone.options.photodropzone = {
 		this.on("complete", function(file) {
 			this.removeFile(file);
 			//history.go(0);
-			$("#NG1").reload();
+			$("#NG1").nanoGallery('reload');
 			//$("#NG1").load(window.location.href + "photos", function() {
 				//$("#NG1").nanoGallery({
 				//    //itemsBaseURL:'http://localhost:3000',
