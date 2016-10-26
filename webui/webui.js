@@ -91,7 +91,7 @@ app.get('/nanoPhotosProvider.php', function (req,res) {
 
 
 // Pipe files like css
-app.get(/files/.+\.css$/i, function(req, res){
+app.get(/files\/.+\.css$/i, function(req, res){
 	var staticFiles = "./";
     var filePath = path.join(staticFiles, req.path),
     fstream;
