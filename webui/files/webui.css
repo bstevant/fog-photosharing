@@ -9,3 +9,12 @@ body {
 	border: 5px dashed #aaa;
 	border-radius: 25px;
 }
+
+form {
+	margin-bottom: 0em;
+}
+
+.dropzone {
+	background: #000;
+	border: 0px;
+}
