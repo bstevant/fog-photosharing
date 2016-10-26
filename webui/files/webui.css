@@ -1,0 +1,11 @@
+body { 
+	font-size:12px;
+	font-family: Verdana, Tahoma, Arial, Helvetica, sans-serif;
+	background-color: #000;
+	color: #eee;
+}
+
+#dz {
+	border: 5px dashed #aaa;
+	border-radius: 25px;
+}

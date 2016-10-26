@@ -7,6 +7,7 @@ RUN npm install
 
 COPY webui.js ./
 COPY views ./views/
+COPY files ./files/
 
 
 EXPOSE 8080

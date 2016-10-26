@@ -90,6 +90,30 @@ app.get('/nanoPhotosProvider.php', function (req,res) {
 });
 
 
+// Pipe files like css
+app.get(/files/.+\.css$/i, function(req, res){
+	var staticFiles = "./";
+    var filePath = path.join(staticFiles, req.path),
+    fstream;
+
+    console.log("Access to file: " + filePath);
+
+    //filePath = decodeURI(filePath);
+
+    fs.stat(filePath, function(err){
+        if (err){
+            return common.error(req, res, next, 404, 'File not found', err);
+        }
+        fstream = fs.createReadStream(filePath);
+        fstream.on('error', function(err){
+            return common.error(req, res, next, 404, 'File not found', err);
+        });
+
+        return fstream.pipe(res);
+    });
+});
+
+
 // Proxy thumbs requests to thumbhub
 app.get(/thumbs\/.+(\.(png|jpg|bmp|jpeg|gif|tif))$/i, function (req, res) {
 	pickupSRV(thumbhub_srv, function(record) {
