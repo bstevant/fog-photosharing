@@ -9,10 +9,17 @@ body {
 	margin-bottom: 20px;
 }
 
+.nanoGalleryBreadcrumb {
+	font-size:18px;
+	color: #aaa;
+}
+
+
 #dz {
 	border: 5px dashed #aaa;
 	border-radius: 25px;
 	padding: 10px;
+	margin: 0 50px;
 }
 
 form {
