@@ -2,6 +2,7 @@ var express = require('express'),
     port = 8080,
     host = "::";
 var fs = require('fs');
+var path = require('path');
 var url = require('url');
 var request = require('request');
 var dns = require('dns');
