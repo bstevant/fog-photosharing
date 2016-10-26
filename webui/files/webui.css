@@ -5,9 +5,14 @@ body {
 	color: #eee;
 }
 
+#NG1 {
+	margin-bottom: 20px;
+}
+
 #dz {
 	border: 5px dashed #aaa;
 	border-radius: 25px;
+	padding: 10px;
 }
 
 form {
@@ -17,4 +22,9 @@ form {
 .dropzone {
 	background: #000;
 	border: 0px;
+}
+
+.dz-message {
+	font-size:18px;
+	color: #aaa;
 }
