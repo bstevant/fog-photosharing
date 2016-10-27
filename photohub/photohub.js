@@ -74,7 +74,7 @@ module.exports = function(config){
 							res.writeHead(500);
 							res.end();
 						}
-						//res.setHeader('Content-Type', 'application/json');
+						res.setHeader('Content-Type', 'application/json');
 						console.log("Exported to IPFS with hash: " + r[0]['hash']);
 						res.send(JSON.stringify(r[0]));
 					});

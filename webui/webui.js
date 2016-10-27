@@ -201,11 +201,8 @@ app.post("/photos", function (req, res) {
 					res.writeHead(500);
 					res.end();
 				}
-				console.log("Successfully uploaded photo to Photohub: " + resp);
-				var str = "";
-				resp.on('data', function (chunk) { str += chunk; });
-				resp.on('end', function () {
-					var r = JSON.parse(str);
+					console.log("Successfully uploaded photo to Photohub: " + body);
+					var r = JSON.parse(body);
 					r = resp;
 					if (!r) {
 						console.log("Failed to read Photohub response!");
@@ -228,14 +225,15 @@ app.post("/photos", function (req, res) {
 									'timestamp': creationDate,
 									'description': origName
 								}
-							}, function (err, resp, body){
+							}, function (err){
 								if (err) {
 									console.log("Failed to upload description to Metahub!:" + origName);
+									res.writeHead(500);
+									res.end();
 								}
 								console.log("Successfully uploaded description to Metahub: " + origName);
 								res.end();
 							});
-						});
 					}
 				});
 			});
