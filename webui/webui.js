@@ -203,7 +203,6 @@ app.post("/photos", function (req, res) {
 				}
 				console.log("Successfully uploaded photo to Photohub: " + body);
 				var r = JSON.parse(body);
-				r = resp;
 				if (!r) {
 					console.log("Failed to read Photohub response!");
 					res.writeHead(500);
