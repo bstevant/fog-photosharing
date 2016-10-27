@@ -10,7 +10,7 @@ RUN wget https://dist.ipfs.io/go-ipfs/v0.4.4/go-ipfs_v0.4.4_linux-386.tar.gz && 
 	rm -rf go-ipfs* 
 
 COPY resources resources/
-COPY app.js common.js photohub.js run-photohub.sh test.js ./
+COPY app.js common.js photohub.js run-photohub.sh ./
 
 
 EXPOSE 3000
