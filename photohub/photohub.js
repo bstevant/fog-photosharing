@@ -39,9 +39,8 @@ module.exports = function(config){
 			if (err){
 				console.log("File not found");
 				var fileName = path.basename(filePath);
-				pickupSRV(metahub_srv, function(record) {
-					
-				}
+				//pickupSRV(metahub_srv, function(record) {
+				//}
 				
 				return common.error(req, res, next, 404, 'File not found', err);
 			}
@@ -67,7 +66,7 @@ module.exports = function(config){
 					if (err) {
 						console.log("Error Writing file at " + newPath);
 					} else {
-						console.log("Successfully saved new photo " + origName);                        
+						console.log("Successfully saved new photo " + origName);
 					}
 					ipfs.util.addFromFs(newPath, {recursive: false}, function(err, r) {
 						if (err) {
