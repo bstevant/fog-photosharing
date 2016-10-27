@@ -9,7 +9,7 @@ tmp = require("tmp"),
 common;
 
 var metahub_srv = "bokeh-metahub.service.consul."
-var photohub_srv = "bokeh-photohub.service.consul."
+var photohub_srv = "bokeh-photohub-3000.service.consul."
 var thumbhub_srv = "bokeh-thumbhub.service.consul."
 
 function pickupSRV(name, func) {

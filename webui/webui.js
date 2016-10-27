@@ -8,7 +8,7 @@ var request = require('request');
 var dns = require('dns');
 
 var metahub_srv = "bokeh-metahub.service.consul."
-var photohub_srv = "bokeh-photohub.service.consul."
+var photohub_srv = "bokeh-photohub-3000.service.consul."
 var thumbhub_srv = "bokeh-thumbhub.service.consul."
 
 function pickupSRV(name, func) {
