@@ -7,4 +7,4 @@ fi
 
 ./ipfs daemon &
 sleep 10
-node test.js
+node app.js
