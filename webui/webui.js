@@ -1,6 +1,6 @@
 var express = require('express'),
-    port = 8080,
-    host = "::";
+port = 8080,
+host = "::";
 var fs = require('fs');
 var path = require('path');
 var url = require('url');
@@ -94,24 +94,24 @@ app.get('/nanoPhotosProvider.php', function (req,res) {
 // Pipe files like css
 app.get(/files\/.+\.css$/i, function(req, res){
 	var staticFiles = "./";
-    var filePath = path.join(staticFiles, req.path),
-    fstream;
+	var filePath = path.join(staticFiles, req.path),
+	fstream;
 
-    console.log("Access to file: " + filePath);
+	console.log("Access to file: " + filePath);
 
-    //filePath = decodeURI(filePath);
+	//filePath = decodeURI(filePath);
 
-    fs.stat(filePath, function(err){
-        if (err){
-            return common.error(req, res, next, 404, 'File not found', err);
-        }
-        fstream = fs.createReadStream(filePath);
-        fstream.on('error', function(err){
-            return common.error(req, res, next, 404, 'File not found', err);
-        });
+	fs.stat(filePath, function(err){
+		if (err){
+			return common.error(req, res, next, 404, 'File not found', err);
+		}
+		fstream = fs.createReadStream(filePath);
+		fstream.on('error', function(err){
+			return common.error(req, res, next, 404, 'File not found', err);
+		});
 
-        return fstream.pipe(res);
-    });
+		return fstream.pipe(res);
+	});
 });
 
 
@@ -202,38 +202,42 @@ app.post("/photos", function (req, res) {
 					res.end();
 				}
 				console.log("Successfully uploaded photo to Photohub: " + resp);
-				//var r = JSON.parse(resp);
-				r = resp;
-				if (!r) {
-					console.log("Failed to read Photohub response!");
-					res.writeHead(500);
-					res.end();
-				} else {
-					hash = r['hash'];
-					console.log("Hash: " + hash);
-					pickupSRV(metahub_srv, function(record) {
-						myurl = url.parse("http://bokeh-metahub.service.dc1.consul:5000/photos");
-						myurl.hostname = record.name;
-						myurl.port = record.port;
-						console.log("Uploading metadata to Metahub: http://"+myurl.hostname+":"+myurl.port);
-						request({ 
-							url: myurl,
-							method: 'POST',
-							json: {
-								'hash': hash,
-								'url': encodeURIComponent(origName),
-								'timestamp': creationDate,
-								'description': origName
-							}
-						}, function (err, resp, body){
-							if (err) {
-								console.log("Failed to upload description to Metahub!:" + origName);
-							}
-							console.log("Successfully uploaded description to Metahub: " + origName);
-							res.end();
+				var str = "";
+				resp.on('data', function (chunk) { str += chunk; });
+				resp.on('end', function () {
+					var r = JSON.parse(str);
+					r = resp;
+					if (!r) {
+						console.log("Failed to read Photohub response!");
+						res.writeHead(500);
+						res.end();
+					} else {
+						hash = r['hash'];
+						console.log("Hash: " + hash);
+						pickupSRV(metahub_srv, function(record) {
+							myurl = url.parse("http://bokeh-metahub.service.dc1.consul:5000/photos");
+							myurl.hostname = record.name;
+							myurl.port = record.port;
+							console.log("Uploading metadata to Metahub: http://"+myurl.hostname+":"+myurl.port);
+							request({ 
+								url: myurl,
+								method: 'POST',
+								json: {
+									'hash': hash,
+									'url': encodeURIComponent(origName),
+									'timestamp': creationDate,
+									'description': origName
+								}
+							}, function (err, resp, body){
+								if (err) {
+									console.log("Failed to upload description to Metahub!:" + origName);
+								}
+								console.log("Successfully uploaded description to Metahub: " + origName);
+								res.end();
+							});
 						});
-					});
-				}
+					}
+				});
 			});
 		});
 	});
