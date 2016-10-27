@@ -2,21 +2,6 @@ from flask import Flask, jsonify, abort, request, make_response, url_for
 from tinydb import TinyDB, where, Query
 import uuid, time
 
-photo1 = {
-    'uuid': '0be9c1e3-ae5e-4abc-aa08-d64ad01abe37',
-    'url': '03082005.jpg',
-    'timestamp': '1123583543',
-    'description': 'Cheese guitar !'
-}
-
-album1 = {
-    'uuid': '4a4aff69-ff29-4c7e-8c71-ba05c847686a',
-    'name': 'Test Album',
-    'photos': [ 
-        { 'uuid': '0be9c1e3-ae5e-4abc-aa08-d64ad01abe37' }
-    ]
-}
-
 db = TinyDB('/metahub/db.json')
 photos = db.table('photos')
 albums = db.table('albums')
@@ -108,7 +93,16 @@ def update_album(uid):
 # Returns list of photos
 @app.route('/photos', methods=['GET'])
 def list_photos():
-    return jsonify({'photos': photos.all()})
+    url = request.args.get('url')
+    if url != None:
+        q = Query()
+        p = photos.search(q.url == url)
+        if len(p) >= 1:
+            return jsonify({'photos': p})
+        else:
+            abort(404)
+    else:
+        return jsonify({'photos': photos.all()})
 
 ####################################################################
 # Route POST /photos/
@@ -124,6 +118,7 @@ def create_photo():
     photo = {
         'uuid': create_uniq_uid(photos),
         'url': request.json['url'],
+        'hash': request.json['hash'],
         'timestamp': request.json['timestamp'],
         'description': request.json['description']
     }
@@ -159,6 +154,7 @@ def update_photo(uid):
     photo = {
         'uuid': uid,
         'url': p1['url'],
+        'hash': p1['hash'],
         'timestamp': p1['timestamp'],
         'description': request.json['description']
     }

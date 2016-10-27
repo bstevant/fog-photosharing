@@ -1,22 +1,24 @@
 {
-    "author": "Bruno STEVANT",
-    "name": "photohub",
-    "description": "PhotoHub Service",
-    "version": "1.0.0",
-    "homepage": "https://github.com/bstevant/fog-photosharing",
-    "repository": {
-        "url": ""
-    },
-    "engines": {
-        "node": ">=0.6.2"
-    },
-    "dependencies": {
-        "ejs": "2.0.8",
-        "express": "4.10.7",
-        "underscore": "1.8.3",
-        "multiparty": "4.1.2"
-    },
-    "scripts": {
-        "start": "node app.js"
-    }
+	"author": "Bruno STEVANT",
+	"name": "photohub",
+	"description": "PhotoHub Service",
+	"version": "1.0.0",
+	"homepage": "https://github.com/bstevant/fog-photosharing",
+	"repository": {
+		"url": ""
+	},
+	"engines": {
+		"node": ">=0.6.2"
+	},
+	"dependencies": {
+		"ejs": "2.0.8",
+		"express": "4.10.7",
+		"underscore": "1.8.3",
+		"request": "2.75.0",
+		"ipfs-api": ">=9.0.0",
+		"multiparty": "4.1.2"
+	},
+	"scripts": {
+		"start": "node app.js"
+	}
 }
