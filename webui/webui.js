@@ -201,41 +201,41 @@ app.post("/photos", function (req, res) {
 					res.writeHead(500);
 					res.end();
 				}
-					console.log("Successfully uploaded photo to Photohub: " + body);
-					var r = JSON.parse(body);
-					r = resp;
-					if (!r) {
-						console.log("Failed to read Photohub response!");
-						res.writeHead(500);
-						res.end();
-					} else {
-						hash = r['hash'];
-						console.log("Hash: " + hash);
-						pickupSRV(metahub_srv, function(record) {
-							myurl = url.parse("http://bokeh-metahub.service.dc1.consul:5000/photos");
-							myurl.hostname = record.name;
-							myurl.port = record.port;
-							console.log("Uploading metadata to Metahub: http://"+myurl.hostname+":"+myurl.port);
-							request({ 
-								url: myurl,
-								method: 'POST',
-								json: {
-									'hash': hash,
-									'url': encodeURIComponent(origName),
-									'timestamp': creationDate,
-									'description': origName
-								}
-							}, function (err){
-								if (err) {
-									console.log("Failed to upload description to Metahub!:" + origName);
-									res.writeHead(500);
-									res.end();
-								}
-								console.log("Successfully uploaded description to Metahub: " + origName);
+				console.log("Successfully uploaded photo to Photohub: " + body);
+				var r = JSON.parse(body);
+				r = resp;
+				if (!r) {
+					console.log("Failed to read Photohub response!");
+					res.writeHead(500);
+					res.end();
+				} else {
+					hash = r['hash'];
+					console.log("Hash: " + hash);
+					pickupSRV(metahub_srv, function(record) {
+						myurl = url.parse("http://bokeh-metahub.service.dc1.consul:5000/photos");
+						myurl.hostname = record.name;
+						myurl.port = record.port;
+						console.log("Uploading metadata to Metahub: http://"+myurl.hostname+":"+myurl.port);
+						request({ 
+							url: myurl,
+							method: 'POST',
+							json: {
+								'hash': hash,
+								'url': encodeURIComponent(origName),
+								'timestamp': creationDate,
+								'description': origName
+							}
+						}, function (err){
+							if (err) {
+								console.log("Failed to upload description to Metahub!:" + origName);
+								res.writeHead(500);
 								res.end();
-							});
-					}
-				});
+							}
+							console.log("Successfully uploaded description to Metahub: " + origName);
+							res.end();
+						});
+					});
+				}
 			});
 		});
 	});
