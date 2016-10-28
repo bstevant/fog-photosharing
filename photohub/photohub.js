@@ -51,6 +51,7 @@ module.exports = function(config){
 						var str = '';
 						response.on('data', function (chunk) { str += chunk; });
 						response.on('end', function () {
+							console.log("Got answer from Metahub: " + str);
 							var resp = JSON.parse(str);
 							if (resp) {
 								// Only get the first photo
@@ -76,11 +77,13 @@ module.exports = function(config){
 									});
 								});
 							} else {
+								console.log('Bad response from Metahub');
 								res.status(500).send('Bad response from Metahub');
 							}
 						});
 					}).on('error', function (error) {
-						res.status(500).send('Bad response from Metahub');
+						console.log('Error while requesting Metahub');
+						res.status(500).send('Error while requesting Metahub');
 					}).end();
 				});
 			} else {
