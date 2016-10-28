@@ -56,14 +56,24 @@ module.exports = function(config){
 								// Only get the first photo
 								myPhoto = resp['photos'][0];
 								hash = myPhoto['hash'];
+								console.log("Requesting IPFS hash: " + hash);
 								ipfs.files.get(hash, function(err, stream) {
 									if (err) {
 										console.log("Error fetching file from IPFS: " + err);
 										res.status(500).send('Error fetching file from IPFS');
 									}
 									stream.on('data', (file) => {
-										file.content.pipe(myFile)
-									})
+										file.content.pipe(myFile);
+									});
+									stream.on('end', () => {
+										console.log("File saved to: " + filePath + " -- Now pipe HTTP response");
+										fstream = fs.createReadStream(filePath);
+										fstream.on('error', function(err){
+											return common.error(req, res, next, 404, 'File not found', err);
+										});
+
+										return fstream.pipe(res);
+									});
 								});
 							} else {
 								res.status(500).send('Bad response from Metahub');
@@ -73,15 +83,14 @@ module.exports = function(config){
 						res.status(500).send('Bad response from Metahub');
 					}).end();
 				});
-				
-				return common.error(req, res, next, 404, 'File not found', err);
-			}
-			fstream = fs.createReadStream(filePath);
-			fstream.on('error', function(err){
-				return common.error(req, res, next, 404, 'File not found', err);
-			});
+			} else {
+				fstream = fs.createReadStream(filePath);
+				fstream.on('error', function(err){
+					return common.error(req, res, next, 404, 'File not found', err);
+				});
 
-			return fstream.pipe(res);
+				return fstream.pipe(res);
+			}
 		});
 	});
     
