@@ -3,6 +3,7 @@ fs = require('fs'),
 path = require('path'),
 request = require('request'),
 ipfsAPI = require('ipfs-api'),
+dns = require('dns'),
 common;
 
 
