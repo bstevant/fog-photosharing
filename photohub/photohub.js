@@ -4,6 +4,7 @@ path = require('path'),
 request = require('request'),
 ipfsAPI = require('ipfs-api'),
 dns = require('dns'),
+url = require('url'),
 common;
 
 
