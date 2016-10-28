@@ -11,13 +11,13 @@ var photohub_srv = "bokeh-photohub.service.consul."
 var thumbhub_srv = "bokeh-thumbhub.service.consul."
 
 function pickupSRV(name, func) {
-    dns.resolveSrv(name, function (err, results) {
-        if (results instanceof Array) {
-            // Pickup a random result from the different resolved names
-            result = results[Math.floor(Math.random()*results.length)];
-            func(result);
-        }
-    });
+	dns.resolveSrv(name, function (err, results) {
+		if (results instanceof Array) {
+			// Pickup a random result from the different resolved names
+			result = results[Math.floor(Math.random()*results.length)];
+			func(result);
+		}
+	});
 }
 
 
@@ -37,10 +37,40 @@ module.exports = function(config){
 
 		fs.stat(filePath, function(err){
 			if (err){
-				console.log("File not found");
+				console.log("File not found on cache, try to find it on IPFS");
 				var fileName = path.basename(filePath);
-				//pickupSRV(metahub_srv, function(record) {
-				//}
+				var myFile = fs.createWriteStream(filePath);
+				pickupSRV(metahub_srv, function(record) {
+					var myurl = url.parse("http://bokeh-metahub.service.consul:5000/photos?url="+fileName);
+					myurl.hostname = record.name;
+					myurl.port = record.port;
+					console.log("Requesting Metahub: "+url.format(myurl));
+					request({uri: myurl}).on('response', function(response) {
+						var str = '';
+						response.on('data', function (chunk) { str += chunk; });
+						response.on('end', function () {
+							var resp = JSON.parse(str);
+							if (resp) {
+								// Only get the first photo
+								myPhoto = rep['photos'][0];
+								hash = myPhoto['hash'];
+								ipfs.files.get(hash, function(err, stream) {
+									if (err) {
+										console.log("Error fetching file from IPFS: " + err);
+										res.status(500).send('Error fetching file from IPFS');
+									}
+									stream.on('data', (file) => {
+										file.content.pipe(myFile)
+									})
+								});
+							} else {
+								res.status(500).send('Bad response from Metahub');
+							}
+						});
+					}).on('error', function (error) {
+						res.status(500).send('Bad response from Metahub');
+					}).end();
+				});
 				
 				return common.error(req, res, next, 404, 'File not found', err);
 			}
