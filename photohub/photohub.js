@@ -54,7 +54,7 @@ module.exports = function(config){
 							var resp = JSON.parse(str);
 							if (resp) {
 								// Only get the first photo
-								myPhoto = rep['photos'][0];
+								myPhoto = resp['photos'][0];
 								hash = myPhoto['hash'];
 								ipfs.files.get(hash, function(err, stream) {
 									if (err) {
