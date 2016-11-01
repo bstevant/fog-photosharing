@@ -79,8 +79,8 @@ app.get('/nanoPhotosProvider.php', function (req,res) {
 			e.kind = 'image';
 			e.ID = photos[i]["uuid"];
 			e.albumID = '0'
-			e.src = 'photos/' + photos[i]["url"];
-			e.srct = 'thumbs/' + photos[i]["url"];
+			e.src = 'photos/hash/' + photos[i]["hash"];
+			e.srct = 'thumbs/' + photos[i]["hash"];
 			e.imgWidth = 150
 			e.imgHeight = 100
 			table.push(e);

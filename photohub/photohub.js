@@ -96,7 +96,24 @@ module.exports = function(config){
 			}
 		});
 	});
-    
+
+	app.get(/hash\/.+$/, function(req, res, next){
+		hash = path.parse(req.path).base;
+		ipfs.files.get(hash, function(err, stream) {
+			if (err) {
+				console.log("Error fetching file from IPFS: " + err);
+				res.status(500).send('Error fetching file from IPFS');
+			}
+			stream.on('data', (file) => {
+				file.content.pipe(res);
+			});
+			stream.on('end', () => {
+				res.end();
+			});
+		});
+	});
+	
+	
 	app.post("/", function(req, res, next){
 		var multiparty = require('multiparty');
 		var form = new multiparty.Form();

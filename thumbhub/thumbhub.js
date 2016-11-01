@@ -28,10 +28,11 @@ module.exports = function(config){
 	staticFiles = config.staticFiles,
 	common = require('./common')(config);
 
-	app.get(/.+\.(jpg|bmp|jpeg|gif|png|tif)$/i, function(req, res, next){
+//	app.get(/.+\.(jpg|bmp|jpeg|gif|png|tif)$/i, function(req, res, next){
+	app.get(/.+$/i, function(req, res, next){
 		var filePath = path.join(staticFiles, req.path),
 		fstream;
-		var filename = path.parse(req.path).base
+		var filename = path.parse(req.path).base;
 
 		console.log("Got request for " + config.urlRoot + req.path);
 
@@ -42,7 +43,7 @@ module.exports = function(config){
 				console.log("Thumb not found: " + req.path);
 				tmpFile = tmp.fileSync();
 				pickupSRV(photohub_srv, function(record) {
-					var myurl = url.parse('http://bokeh-photohub.service.consul:3000/photos/' + filename);
+					var myurl = url.parse('http://bokeh-photohub.service.consul:3000/photos/hash/' + filename);
 					myurl.hostname = record.name;
 					myurl.port = record.port;
 					console.log('Uploading photo from PhotoHub: '+myurl.format());
