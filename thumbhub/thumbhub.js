@@ -57,12 +57,12 @@ module.exports = function(config){
 						response.on('end', function () {
 							jimp.read(tmpFile.name, function(err, img) {
 								if (err) {
-									console.log("Cannot read temp file: " + tmpFile.name)
+									console.log("Cannot read temp file: " + tmpFile.name);
 									return common.error(req, res, next, 404, 'File not found', err);
 								}
 								img.resize(256, jimp.AUTO).write(filePath, function(err, img) {
 									if (err) {
-										console.log("Cannot write final thumb: " + tmpFile.name)
+										console.log("Cannot write final thumb: " + tmpFile.name + " err: " + err);
 										return common.error(req, res, next, 404, 'File not found', err);                                        
 									}
 									console.log("Successfully created thumb: " + filePath);
