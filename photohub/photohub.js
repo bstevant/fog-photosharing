@@ -97,7 +97,8 @@ module.exports = function(config){
 		});
 	});
 
-	app.get(/hash\/.+$/, function(req, res, next){
+	app.get(/hash\/.+$/i, function(req, res, next){
+		console.log("Got request for " + config.urlRoot + req.path);
 		hash = path.parse(req.path).base;
 		ipfs.files.get(hash, function(err, stream) {
 			if (err) {
@@ -107,9 +108,9 @@ module.exports = function(config){
 			stream.on('data', (file) => {
 				file.content.pipe(res);
 			});
-			stream.on('end', () => {
-				res.end();
-			});
+			//stream.on('end', () => {
+			//	res.end();
+			//});
 		});
 	});
 	
