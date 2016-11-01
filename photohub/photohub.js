@@ -106,6 +106,7 @@ module.exports = function(config){
 				res.status(500).send('Error fetching file from IPFS');
 			}
 			stream.on('data', (file) => {
+				console.log("File found on IPFS: " + file.path);
 				file.content.pipe(res);
 			});
 			//stream.on('end', () => {
