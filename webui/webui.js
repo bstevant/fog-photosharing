@@ -202,6 +202,7 @@ app.post("/photos", function (req, res) {
 					console.log("Failed to upload image to Photohub!:" + origName);
 					res.writeHead(500);
 					res.end();
+					return;
 				}
 				console.log("Successfully uploaded photo to Photohub: " + body);
 				var r = JSON.parse(body);
@@ -209,6 +210,7 @@ app.post("/photos", function (req, res) {
 					console.log("Failed to read Photohub response!");
 					res.writeHead(500);
 					res.end();
+					return;
 				} else {
 					hash = r['hash'];
 					type = r['type'];
@@ -236,6 +238,7 @@ app.post("/photos", function (req, res) {
 							}
 							console.log("Successfully uploaded description to Metahub: " + origName);
 							res.end();
+							return;
 						});
 					});
 				}

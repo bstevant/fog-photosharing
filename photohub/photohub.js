@@ -144,9 +144,9 @@ module.exports = function(config){
 		var multiparty = require('multiparty');
 		var form = new multiparty.Form();
 
-		form.on('file', function(name,file){
+		form.on('file', function(name, file){
 			var type = mime.contentType(file.originalFilename) || 'application/octet-stream';
-			ipfs.util.addFromFs(newPath, {recursive: false}, function(err, r) {
+			ipfs.util.addFromFs(file.path, {recursive: false}, function(err, r) {
 				if (err) {
 					console.log("Error adding file: " + err);
 					res.writeHead(500);
