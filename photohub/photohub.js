@@ -128,11 +128,12 @@ module.exports = function(config){
 						});
 					}).on('error', function (error) {
 						console.log('Error while requesting Metahub');
-					}).end();
+					}).end(function () {
+						console.log("Setting Content-Type: " + type);
+						res.setHeader('Content-Type', type);
+						file.content.pipe(res);
+					});
 				});
-				console.log("Setting Content-Type: " + type);
-				res.setHeader('Content-Type', type);
-				file.content.pipe(res);
 			});
 			//stream.on('end', () => {
 			//	res.end();
