@@ -119,6 +119,7 @@ def create_photo():
         'uuid': create_uniq_uid(photos),
         'url': request.json['url'],
         'hash': request.json['hash'],
+        'type': request.json['type'],
         'timestamp': request.json['timestamp'],
         'description': request.json['description']
     }

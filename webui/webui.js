@@ -211,6 +211,7 @@ app.post("/photos", function (req, res) {
 					res.end();
 				} else {
 					hash = r['hash'];
+					type = r['type'];
 					console.log("Hash: " + hash);
 					pickupSRV(metahub_srv, function(record) {
 						myurl = url.parse("http://bokeh-metahub.service.dc1.consul:5000/photos");
@@ -222,6 +223,7 @@ app.post("/photos", function (req, res) {
 							method: 'POST',
 							json: {
 								'hash': hash,
+								'type': type,
 								'url': encodeURIComponent(origName),
 								'timestamp': creationDate,
 								'description': origName

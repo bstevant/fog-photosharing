@@ -108,8 +108,29 @@ module.exports = function(config){
 			}
 			stream.on('data', (file) => {
 				console.log("File found on IPFS: " + file.path);
-				var type = mime.contentType(path.extname(file.path)) || 'application/octet-stream';
-				res.setHeader('content-type',type);
+				// Get Content-type from MetaHub
+				var type = 'application/octet-stream';
+				pickupSRV(metahub_srv, function(record) {
+					var myurl = 'http://' + record.name + ':' + record.port + '/photos/hash/' + hash;
+					console.log("Requesting Metahub: "+ myurl);
+					request({uri: myurl}).on('response', function(response) {
+						var str = '';
+						response.on('data', function (chunk) { str += chunk; });
+						response.on('end', function () {
+							console.log("Got answer from Metahub: " + str);
+							var resp = JSON.parse(str);
+							if (resp) {
+								myPhoto = resp['photos'][0];
+								type = myPhoto['type'];
+							} else {
+								console.log('Bad response from Metahub');
+							}
+						});
+					}).on('error', function (error) {
+						console.log('Error while requesting Metahub');
+					}).end();
+				});
+				res..setHeader('Content-Type', type);
 				file.content.pipe(res);
 			});
 			//stream.on('end', () => {
@@ -124,27 +145,17 @@ module.exports = function(config){
 		var form = new multiparty.Form();
 
 		form.on('file', function(name,file){
-			var tempPath = file.path;
-			var origName = encodeURIComponent(file.originalFilename);
-			fs.readFile(tempPath, function (err, data) {
-				var newPath = __dirname + "/" + config.staticFiles + "/" + origName;
-				fs.writeFile(newPath, data, function (err) {
-					if (err) {
-						console.log("Error Writing file at " + newPath);
-					} else {
-						console.log("Successfully saved new photo " + origName);
-					}
-					ipfs.util.addFromFs(newPath, {recursive: false}, function(err, r) {
-						if (err) {
-							console.log("Error adding file: " + err);
-							res.writeHead(500);
-							res.end();
-						}
-						res.setHeader('Content-Type', 'application/json');
-						console.log("Exported to IPFS with hash: " + r[0]['hash']);
-						res.send(JSON.stringify(r[0]));
-					});
-				});
+			var type = mime.contentType(file.originalFilename) || 'application/octet-stream';
+			ipfs.util.addFromFs(newPath, {recursive: false}, function(err, r) {
+				if (err) {
+					console.log("Error adding file: " + err);
+					res.writeHead(500);
+					res.end();
+				}
+				res.setHeader('Content-Type', 'application/json');
+				console.log("Exported to IPFS with hash: " + r[0]['hash']);
+				r[0]['type'] = type;
+				res.send(JSON.stringify(r[0]));
 			});
 		});
 		form.parse(req);
