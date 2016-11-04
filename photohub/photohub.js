@@ -5,6 +5,7 @@ request = require('request'),
 ipfsAPI = require('ipfs-api'),
 dns = require('dns'),
 url = require('url'),
+mime = require('mime-types'),
 common;
 
 
@@ -107,6 +108,8 @@ module.exports = function(config){
 			}
 			stream.on('data', (file) => {
 				console.log("File found on IPFS: " + file.path);
+				var type = mime.contentType(path.extname(file.path)) || 'application/octet-stream';
+				res.setHeader('content-type',type);
 				file.content.pipe(res);
 			});
 			//stream.on('end', () => {

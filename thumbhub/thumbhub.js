@@ -46,32 +46,50 @@ module.exports = function(config){
 					var myurl = url.parse('http://bokeh-photohub.service.consul:3000/photos/hash/' + filename);
 					myurl.hostname = record.name;
 					myurl.port = record.port;
-					console.log('Uploading photo from PhotoHub: '+myurl.format());
-					request({uri: myurl})
-					.on('error', function(err) {
-						console.log("Unable to create thumb: " + req.path);
-						return common.error(req, res, next, 404, 'File not found', err);
-					})
-					.on('response', function(response) {
-						console.log("Reply from photohub: " + response.statusCode)
-						response.on('end', function () {
-							jimp.read(tmpFile.name, function(err, img) {
-								if (err) {
-									console.log("Cannot read temp file: " + tmpFile.name);
-									return common.error(req, res, next, 404, 'File not found', err);
-								}
-								img.resize(256, jimp.AUTO).write(filePath, function(err, img) {
-									if (err) {
-										console.log("Cannot write final thumb: " + tmpFile.name + " err: " + err);
-										return common.error(req, res, next, 404, 'File not found', err);                                        
-									}
-									console.log("Successfully created thumb: " + filePath);
-									fstream = fs.createReadStream(filePath);
-									return fstream.pipe(res);                  
-								});
-							});
+					console.log('Uploading photo from PhotoHub: '+url.format(myurl));
+					jimp.read(url.format(myurl), function(err, img) {
+						if (err) {
+							console.log("Cannot download: " + myurl.format());
+							return common.error(req, res, next, 404, 'File not found', err);
+						}
+						img.resize(256, jimp.AUTO).write(filePath, function(err, img) {
+							if (err) {
+								console.log("Cannot write final thumb: " + filePath + " err: " + err);
+								return common.error(req, res, next, 404, 'File not found', err);
+							}
+							console.log("Successfully created thumb: " + filePath);
+							fstream = fs.createReadStream(filePath);
+							return fstream.pipe(res);
 						});
-					}).pipe(fs.createWriteStream(tmpFile.name));
+					});
+					
+					//request({uri: myurl})
+					//.on('error', function(err) {
+					//	console.log("Unable to create thumb: " + req.path);
+					//	return common.error(req, res, next, 404, 'File not found', err);
+					//})
+					//.on('response', function(response) {
+					//	response.on('end', function () {
+					//		type = response.headers['content-type']
+					//		console.log("Reply from photohub: " + response.statusCode + " type: " + type);
+					//		jimp.read(tmpFile.name, function(err, img) {
+					//			if (err) {
+					//				console.log("Cannot read temp file: " + tmpFile.name);
+					//				return common.error(req, res, next, 404, 'File not found', err);
+					//			}
+					//			img.mimetype = type;
+					//			img.resize(256, jimp.AUTO).write(filePath, function(err, img) {
+					//				if (err) {
+					//					console.log("Cannot write final thumb: " + tmpFile.name + " err: " + err);
+					//					return common.error(req, res, next, 404, 'File not found', err);                                        
+					//				}
+					//				console.log("Successfully created thumb: " + filePath);
+					//				fstream = fs.createReadStream(filePath);
+					//				return fstream.pipe(res);                  
+					//			});
+					//		});
+					//	});
+					//}).pipe(fs.createWriteStream(tmpFile.name));
 				});
 			} else {
 				fstream = fs.createReadStream(filePath);
