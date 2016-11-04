@@ -130,7 +130,7 @@ module.exports = function(config){
 						console.log('Error while requesting Metahub');
 					}).end();
 				});
-				res..setHeader('Content-Type', type);
+				res.setHeader('Content-Type', type);
 				file.content.pipe(res);
 			});
 			//stream.on('end', () => {
