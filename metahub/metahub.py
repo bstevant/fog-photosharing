@@ -94,9 +94,17 @@ def update_album(uid):
 @app.route('/photos', methods=['GET'])
 def list_photos():
     url = request.args.get('url')
+    h = request.args.get('hash')
     if url != None:
         q = Query()
         p = photos.search(q.url == url)
+        if len(p) >= 1:
+            return jsonify({'photos': p})
+        else:
+            abort(404)
+    if h != None:
+        q = Query()
+        p = photos.search(q.hash == h)
         if len(p) >= 1:
             return jsonify({'photos': p})
         else:

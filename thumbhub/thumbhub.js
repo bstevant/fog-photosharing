@@ -47,7 +47,7 @@ module.exports = function(config){
 					console.log('Uploading photo from PhotoHub: '+myurl);
 					jimp.read(myurl, function(err, img) {
 						if (err) {
-							console.log("Cannot download: " + myurl.format());
+							console.log("Cannot download: " + myurl);
 							return common.error(req, res, next, 404, 'File not found', err);
 						}
 						img.resize(256, jimp.AUTO).write(filePath, function(err, img) {

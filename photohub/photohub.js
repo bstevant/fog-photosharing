@@ -111,7 +111,7 @@ module.exports = function(config){
 				// Get Content-type from MetaHub
 				var type = 'application/octet-stream';
 				pickupSRV(metahub_srv, function(record) {
-					var myurl = 'http://' + record.name + ':' + record.port + '/photos/hash/' + hash;
+					var myurl = 'http://' + record.name + ':' + record.port + '/photos?hash=' + hash;
 					console.log("Requesting Metahub: "+ myurl);
 					request({uri: myurl}).on('response', function(response) {
 						var str = '';
