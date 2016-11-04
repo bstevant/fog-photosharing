@@ -130,6 +130,7 @@ module.exports = function(config){
 						console.log('Error while requesting Metahub');
 					}).end();
 				});
+				console.log("Setting Content-Type: " + type);
 				res.setHeader('Content-Type', type);
 				file.content.pipe(res);
 			});
