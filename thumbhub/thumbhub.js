@@ -43,11 +43,9 @@ module.exports = function(config){
 				console.log("Thumb not found: " + req.path);
 				tmpFile = tmp.fileSync();
 				pickupSRV(photohub_srv, function(record) {
-					var myurl = url.parse('http://bokeh-photohub.service.consul:3000/photos/hash/' + filename);
-					myurl.hostname = record.name;
-					myurl.port = record.port;
-					console.log('Uploading photo from PhotoHub: '+url.format(myurl));
-					jimp.read(url.format(myurl), function(err, img) {
+					var myurl = 'http://' + record.name + ':' + record.port + '/photos/hash/' + filename;
+					console.log('Uploading photo from PhotoHub: '+myurl);
+					jimp.read(myurl, function(err, img) {
 						if (err) {
 							console.log("Cannot download: " + myurl.format());
 							return common.error(req, res, next, 404, 'File not found', err);
