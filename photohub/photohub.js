@@ -100,7 +100,31 @@ module.exports = function(config){
 
 	app.get(/hash\/.+$/i, function(req, res, next){
 		console.log("Got request for " + config.urlRoot + req.path);
-		hash = path.parse(req.path).base;
+		var hash = path.parse(req.path).base;
+		var type = 'application/octet-stream';
+		// Get Content-type from MetaHub
+		pickupSRV(metahub_srv, function(record) {
+			var myurl = 'http://' + record.name + ':' + record.port + '/photos?hash=' + hash;
+			console.log("Requesting Metahub: "+ myurl);
+			request({uri: myurl}).on('response', function(response) {
+				var str = '';
+				response.on('data', function (chunk) { str += chunk; });
+				response.on('end', function () {
+					console.log("Got answer from Metahub: " + str);
+					var resp = JSON.parse(str);
+					if (resp) {
+						myPhoto = resp['photos'][0];
+						type = myPhoto['type'];
+					} else {
+						console.log('Bad response from Metahub');
+					}
+				});
+			}).on('error', function (error) {
+				console.log('Error while requesting Metahub');
+			});
+		});
+		
+		res.setHeader('Content-Type', type);
 		ipfs.files.get(hash, function(err, stream) {
 			if (err) {
 				console.log("Error fetching file from IPFS: " + err);
@@ -108,32 +132,7 @@ module.exports = function(config){
 			}
 			stream.on('data', (file) => {
 				console.log("File found on IPFS: " + file.path);
-				// Get Content-type from MetaHub
-				var type = 'application/octet-stream';
-				pickupSRV(metahub_srv, function(record) {
-					var myurl = 'http://' + record.name + ':' + record.port + '/photos?hash=' + hash;
-					console.log("Requesting Metahub: "+ myurl);
-					request({uri: myurl}).on('response', function(response) {
-						var str = '';
-						response.on('data', function (chunk) { str += chunk; });
-						response.on('end', function () {
-							console.log("Got answer from Metahub: " + str);
-							var resp = JSON.parse(str);
-							if (resp) {
-								myPhoto = resp['photos'][0];
-								type = myPhoto['type'];
-							} else {
-								console.log('Bad response from Metahub');
-							}
-						});
-					}).on('error', function (error) {
-						console.log('Error while requesting Metahub');
-					}).end(function () {
-						console.log("Setting Content-Type: " + type);
-						res.setHeader('Content-Type', type);
-						file.content.pipe(res);
-					});
-				});
+				file.content.pipe(res);
 			});
 			//stream.on('end', () => {
 			//	res.end();
