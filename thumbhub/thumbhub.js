@@ -81,14 +81,21 @@ module.exports = function(config){
 								console.log("Cannot download: " + myurl);
 								return common.error(req, res, next, 404, 'File not found', err);
 							}
-							img.resize(256, jimp.AUTO).write(filePath, function(err, img) {
-								if (err) {
-									console.log("Cannot write final thumb: " + filePath + " err: " + err);
+							img.getBuffer(type, function(err, data){
+								jimp.read(data).then(function (image) {
+									img.resize(256, jimp.AUTO).write(filePath, function(err, img) {
+										if (err) {
+											console.log("Cannot write final thumb: " + filePath + " err: " + err);
+											return common.error(req, res, next, 404, 'File not found', err);
+										}
+										console.log("Successfully created thumb: " + filePath);
+										fstream = fs.createReadStream(filePath);
+										return fstream.pipe(res);
+									});
+								}).catch(function (e) {
+									console.log("Cannot red buffer: " + e);
 									return common.error(req, res, next, 404, 'File not found', err);
-								}
-								console.log("Successfully created thumb: " + filePath);
-								fstream = fs.createReadStream(filePath);
-								return fstream.pipe(res);
+								});
 							});
 						});
 					});
