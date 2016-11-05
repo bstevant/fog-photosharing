@@ -86,9 +86,8 @@ module.exports = function(config){
 									console.log("Cannot get buffer: " + err);
 									return common.error(req, res, next, 404, 'File not found', err2);
 								}
-								
-								//console.log("Img: " + img.getMIME());
 								jimp.read(data).then(function (image) {
+									console.log("Image: " + image.getMIME());
 									image.resize(256, jimp.AUTO).write(filePath, function(err3, img) {
 										if (err3) {
 											console.log("Cannot write final thumb: " + filePath + " err3: " + err3);
