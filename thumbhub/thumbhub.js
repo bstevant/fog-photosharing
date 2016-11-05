@@ -77,12 +77,12 @@ module.exports = function(config){
 						var myurl = 'http://' + record.name + ':' + record.port + '/photos/hash/' + filename;
 						console.log('Uploading photo from PhotoHub: '+myurl);
 						jimp.read(myurl, function(err, img) {
-							console.log("Img: " + img);
 							if (err) {
 								console.log("Cannot download: " + myurl);
 								return common.error(req, res, next, 404, 'File not found', err);
 							}
 							img.getBuffer(type, function(err, data){
+								console.log("Img: " + img.getMIME());
 								jimp.read(data).then(function (image) {
 									img.resize(256, jimp.AUTO).write(filePath, function(err, img) {
 										if (err) {
