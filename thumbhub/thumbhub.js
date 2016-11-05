@@ -82,9 +82,9 @@ module.exports = function(config){
 								return common.error(req, res, next, 404, 'File not found', err);
 							}
 							img.getBuffer(type, function(err, data){
-								console.log("Img: " + img.getMIME());
+								//console.log("Img: " + img.getMIME());
 								jimp.read(data).then(function (image) {
-									img.resize(256, jimp.AUTO).write(filePath, function(err, img) {
+									image.resize(256, jimp.AUTO).write(filePath, function(err, img) {
 										if (err) {
 											console.log("Cannot write final thumb: " + filePath + " err: " + err);
 											return common.error(req, res, next, 404, 'File not found', err);
@@ -94,7 +94,7 @@ module.exports = function(config){
 										return fstream.pipe(res);
 									});
 								}).catch(function (e) {
-									console.log("Cannot red buffer: " + e);
+									console.log("Cannot read buffer: " + e);
 									return common.error(req, res, next, 404, 'File not found', err);
 								});
 							});
