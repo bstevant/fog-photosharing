@@ -76,18 +76,23 @@ module.exports = function(config){
 					pickupSRV(photohub_srv, function(record) {
 						var myurl = 'http://' + record.name + ':' + record.port + '/photos/hash/' + filename;
 						console.log('Uploading photo from PhotoHub: '+myurl);
-						jimp.read(myurl, function(err, img) {
-							if (err) {
+						jimp.read(myurl, function(err1, img) {
+							if (err1) {
 								console.log("Cannot download: " + err);
-								return common.error(req, res, next, 404, 'File not found', err);
+								return common.error(req, res, next, 404, 'File not found', err1);
 							}
-							img.getBuffer(type, function(err, data){
+							img.getBuffer(type, function(err2, data){
+								if (err2) {
+									console.log("Cannot get buffer: " + err);
+									return common.error(req, res, next, 404, 'File not found', err2);
+								}
+								
 								//console.log("Img: " + img.getMIME());
 								jimp.read(data).then(function (image) {
-									image.resize(256, jimp.AUTO).write(filePath, function(err, img) {
+									image.resize(256, jimp.AUTO).write(filePath, function(err3, img) {
 										if (err) {
-											console.log("Cannot write final thumb: " + filePath + " err: " + err);
-											return common.error(req, res, next, 404, 'File not found', err);
+											console.log("Cannot write final thumb: " + filePath + " err3: " + err);
+											return common.error(req, res, next, 404, 'File not found', err3);
 										}
 										console.log("Successfully created thumb: " + filePath);
 										fstream = fs.createReadStream(filePath);
