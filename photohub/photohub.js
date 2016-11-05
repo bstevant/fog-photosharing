@@ -101,30 +101,8 @@ module.exports = function(config){
 	app.get(/hash\/.+$/i, function(req, res, next){
 		console.log("Got request for " + config.urlRoot + req.path);
 		var hash = path.parse(req.path).base;
-		var type = 'application/octet-stream';
 		// Get Content-type from MetaHub
-		pickupSRV(metahub_srv, function(record) {
-			var myurl = 'http://' + record.name + ':' + record.port + '/photos?hash=' + hash;
-			console.log("Requesting Metahub: "+ myurl);
-			request({uri: myurl}).on('response', function(response) {
-				var str = '';
-				response.on('data', function (chunk) { str += chunk; });
-				response.on('end', function () {
-					console.log("Got answer from Metahub: " + str);
-					var resp = JSON.parse(str);
-					if (resp) {
-						myPhoto = resp['photos'][0];
-						type = myPhoto['type'];
-					} else {
-						console.log('Bad response from Metahub');
-					}
-				});
-			}).on('error', function (error) {
-				console.log('Error while requesting Metahub');
-			});
-		});
 		
-		res.setHeader('Content-Type', type);
 		ipfs.files.get(hash, function(err, stream) {
 			if (err) {
 				console.log("Error fetching file from IPFS: " + err);

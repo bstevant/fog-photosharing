@@ -97,7 +97,7 @@ app.get(/files\/.+\.css$/i, function(req, res){
 	var filePath = path.join(staticFiles, req.path),
 	fstream;
 
-	console.log("Access to file: " + filePath);
+	console.log("Get " + req.path);
 
 	//filePath = decodeURI(filePath);
 
@@ -118,6 +118,7 @@ app.get(/files\/.+\.css$/i, function(req, res){
 // Proxy thumbs requests to thumbhub
 app.get(/thumbs\/hash\/.+$/i, function(req, res, next){
 //app.get(/thumbs\/.+(\.(png|jpg|bmp|jpeg|gif|tif))$/i, function (req, res) {
+	console.log("Get " + req.path);
 	pickupSRV(thumbhub_srv, function(record) {
 		var myurl = url.parse("http://bokeh-thumbhub.service.consul:3050"+req.path);
 		myurl.hostname = record.name;
@@ -146,6 +147,7 @@ app.get(/thumbs\/hash\/.+$/i, function(req, res, next){
 // Proxy photo requests to photohub
 //app.get(/photos\/.+(\.(jpg|bmp|jpeg|gif|png|tif))$/i, function (req, res) {
 app.get(/photos\/hash\/.+$/i, function(req, res, next){
+	console.log("Get " + req.path);
 	pickupSRV(photohub_srv, function(record) {
 		var myurl = url.parse("http://bokeh-photohub.service.dc1.consul:3000"+req.path);
 		myurl.hostname = record.name;
