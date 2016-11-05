@@ -90,8 +90,8 @@ module.exports = function(config){
 								//console.log("Img: " + img.getMIME());
 								jimp.read(data).then(function (image) {
 									image.resize(256, jimp.AUTO).write(filePath, function(err3, img) {
-										if (err) {
-											console.log("Cannot write final thumb: " + filePath + " err3: " + err);
+										if (err3) {
+											console.log("Cannot write final thumb: " + filePath + " err3: " + err3);
 											return common.error(req, res, next, 404, 'File not found', err3);
 										}
 										console.log("Successfully created thumb: " + filePath);
