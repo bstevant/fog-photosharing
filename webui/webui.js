@@ -116,7 +116,7 @@ app.get(/files\/.+\.css$/i, function(req, res){
 
 
 // Proxy thumbs requests to thumbhub
-app.get(/thumbs\/hash\/.+$/i, function(req, res, next){
+app.get(/thumbs\/.+$/i, function(req, res, next){
 //app.get(/thumbs\/.+(\.(png|jpg|bmp|jpeg|gif|tif))$/i, function (req, res) {
 	console.log("Get " + req.path);
 	pickupSRV(thumbhub_srv, function(record) {

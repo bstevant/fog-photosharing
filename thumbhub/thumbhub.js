@@ -54,7 +54,7 @@ module.exports = function(config){
 	common = require('./common')(config);
 
 //	app.get(/.+\.(jpg|bmp|jpeg|gif|png|tif)$/i, function(req, res, next){
-	app.get(/hash\/.+$/i, function(req, res, next){
+	app.get(/.+$/i, function(req, res, next){
 		var filePath = path.join(staticFiles, req.path),
 		fstream;
 		var filename = path.parse(req.path).base;
