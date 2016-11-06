@@ -65,7 +65,7 @@ function getPhoto(hash, path, cb) {
 			});
 		});
 	});
-});
+}
 
 
 module.exports = function(config){
