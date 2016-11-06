@@ -5,7 +5,7 @@ WORKDIR /thumbhub
 COPY package.json package.json
 RUN npm install
 
-COPY resources resources/
+RUN mkdir -p resources/thumbs
 COPY app.js common.js thumbhub.js ./
 
 
