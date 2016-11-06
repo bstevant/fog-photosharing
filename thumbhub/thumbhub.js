@@ -53,17 +53,14 @@ function getPhoto(hash, path, cb) {
 	pickupSRV(photohub_srv, function(record) {
 		var myurl = 'http://' + record.name + ':' + record.port + '/photos/hash/' + hash;
 		console.log('Uploading photo from PhotoHub: '+myurl);
-		request({uri: myurl})
+		request(myurl)
 		.on('error', function(err) {
 			cb(err);
 		})
-		.pipe(fs.createWriteStream(path))
 		.on('response', function(response) {
 			console.log("Reply from photohub: " + response.statusCode)
-			response.on('end', function () {
-				cb('');
-			});
-		});
+			response.on('end', cb(''));
+		}).pipe(fs.createWriteStream(path));
 	});
 }
 
@@ -77,7 +74,7 @@ module.exports = function(config){
 	app.get(/.+$/i, function(req, res, next){ 
 		var filePath, fstream;
 		var hash = path.basename(req.path);
-		var hashPath =  path.join(common.staticFiles + hash);
+		var hashPath =  path.join(staticFiles + hash);
 		
 		console.log("Got request for " + config.urlRoot + req.path);
 		getMetaData(hash, function (e, p, type) {
