@@ -100,25 +100,14 @@ module.exports = function(config){
 								console.log("Cannot read: " + err);
 								return common.error(req, res, next, 404, 'File not found', err1);
 							}
-							img.getBuffer(type, function(err2, data){
-								if (err2) {
-									console.log("Cannot get buffer: " + err);
-									return common.error(req, res, next, 404, 'File not found', err2);
+							img.resize(256, jimp.AUTO).write(hashPath, function(err3, i) {
+								if (err3) {
+									console.log("Cannot write final thumb: " + hashPath + " err3: " + err3);
+									return common.error(req, res, next, 404, 'File not found', err3);
 								}
-								jimp.read(data).then(function (image) {
-									image.resize(256, jimp.AUTO).write(hashPath, function(err3, img) {
-										if (err3) {
-											console.log("Cannot write final thumb: " + hashPath + " err3: " + err3);
-											return common.error(req, res, next, 404, 'File not found', err3);
-										}
-										console.log("Successfully created thumb: " + hashPath);
-										fstream = fs.createReadStream(hashPath);
-										return fstream.pipe(res);
-									});
-								}).catch(function (e) {
-									console.log("Cannot read buffer: " + e);
-									return common.error(req, res, next, 404, 'File not found', err);
-								});
+								console.log("Successfully created thumb: " + hashPath);
+								fstream = fs.createReadStream(hashPath);
+								return fstream.pipe(res);
 							});
 						});
 					});
