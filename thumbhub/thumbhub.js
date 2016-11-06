@@ -100,7 +100,10 @@ module.exports = function(config){
 								console.log("Cannot read: " + err);
 								return common.error(req, res, next, 404, 'File not found', err1);
 							}
-							img.resize(256, jimp.AUTO).write(hashPath, function(err3, i) {
+							img.resize(256, jimp.AUTO)
+							console.log("Img ext: " + img.getExtension());
+							console.log("Img MIME: " + img.getMIME());
+							img.write(hashPath, function(err3, i) {
 								if (err3) {
 									console.log("Cannot write final thumb: " + hashPath + " err3: " + err3);
 									return common.error(req, res, next, 404, 'File not found', err3);
