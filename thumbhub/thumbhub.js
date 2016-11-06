@@ -59,7 +59,9 @@ function getPhoto(hash, path, cb) {
 		})
 		.on('response', function(response) {
 			console.log("Reply from photohub: " + response.statusCode)
-			response.on('end', cb(''));
+			response.on('end', function () {
+				cb('');
+			});
 		}).pipe(fs.createWriteStream(path));
 	});
 }
