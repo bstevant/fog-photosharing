@@ -58,8 +58,9 @@ function getPhoto(hash, path, cb) {
 			cb(err);
 		})
 		.on('response', function(response) {
-			console.log("Reply from photohub: " + response.statusCode)
+			console.log("Reply from photohub: " + response.statusCode);
 			response.on('end', function () {
+				console.log("Written file: " + path);
 				cb('');
 			});
 		}).pipe(fs.createWriteStream(path));
@@ -76,7 +77,7 @@ module.exports = function(config){
 	app.get(/.+$/i, function(req, res, next){ 
 		var filePath, fstream;
 		var hash = path.basename(req.path);
-		var hashPath =  path.join(staticFiles + hash);
+		var hashPath =  path.join(staticFiles + "/" + hash);
 		
 		console.log("Got request for " + config.urlRoot + req.path);
 		getMetaData(hash, function (e, p, type) {
@@ -88,7 +89,7 @@ module.exports = function(config){
 			fs.stat(hashPath, function(err){
 				if (err){
 					console.log("Thumb not found: " + hashPath);
-					filePath = path.join(common.staticFiles + p);
+					filePath = path.join(staticFiles + "/" + p);
 					getPhoto(hash, filePath, function (err) {
 						if (err) {
 							console.log("Cannot download: " + err);
