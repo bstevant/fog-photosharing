@@ -30,7 +30,6 @@ function getMetaData(hash, cb) {
 			var str = '';
 			response.on('data', function (chunk) { str += chunk; });
 			response.on('end', function () {
-				console.log("Got answer from Metahub: " + str);
 				var resp = JSON.parse(str);
 				if (resp) {
 					myPhoto = resp['photos'][0];
@@ -108,6 +107,7 @@ module.exports = function(config){
 									return common.error(req, res, next, 404, 'File not found', err3);
 								}
 								console.log("Successfully created thumb: " + hashPath);
+								fs.unlink(filePath);
 								fstream = fs.createReadStream(hashPath);
 								return fstream.pipe(res);
 							});
