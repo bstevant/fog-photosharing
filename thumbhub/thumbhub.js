@@ -114,9 +114,9 @@ module.exports = function(config){
 						});
 					});
 				} else {
-					fstream = fs.createReadStream(filePath);
+					fstream = fs.createReadStream(hashPath);
 					fstream.on('error', function(err){
-						console.log("Cannot read thumb: " + req.path);
+						console.log("Cannot read thumb: " + hashPath);
 						return common.error(req, res, next, 404, 'File not found', err);
 					});
 					return fstream.pipe(res);                
