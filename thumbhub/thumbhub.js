@@ -100,16 +100,16 @@ module.exports = function(config){
 								console.log("Cannot read: " + err1);
 								return common.error(req, res, next, 404, 'File not found', err1);
 							}
-							img.resize(256, jimp.AUTO)
-							console.log("Img ext: " + img.getExtension());
-							console.log("Img MIME: " + img.getMIME());
-							img.write(hashPath, function(err3, i) {
+							
+							img.resize(256, jimp.AUTO);
+							hashPath2 = hashPath + p;
+							img.write(hashPath2, function(err3, i) {
 								if (err3) {
-									console.log("Cannot write final thumb: " + hashPath + " err3: " + err3);
+									console.log("Cannot write final thumb: " + hashPath2 + " err3: " + err3);
 									return common.error(req, res, next, 404, 'File not found', err3);
 								}
-								console.log("Successfully created thumb: " + hashPath);
-								fstream = fs.createReadStream(hashPath);
+								console.log("Successfully created thumb: " + hashPath2);
+								fstream = fs.createReadStream(hashPath2);
 								return fstream.pipe(res);
 							});
 						});
