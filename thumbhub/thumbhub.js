@@ -22,7 +22,7 @@ function pickupSRV(name, cb) {
 	});
 }
 
-function getMIMEtype(hash, cb) {
+function getMetaData(hash, cb) {
 	pickupSRV(metahub_srv, function(record) {
 		var myurl = 'http://' + record.name + ':' + record.port + '/photos?hash=' + hash;
 		console.log("Requesting Metahub: "+ myurl);
@@ -35,18 +35,44 @@ function getMIMEtype(hash, cb) {
 				if (resp) {
 					myPhoto = resp['photos'][0];
 					type = myPhoto['type'];
-					cb(false, type);
+					url = myPhoto['url'];
+					cb(false, url, type);
 				} else {
 					console.log('Bad response from Metahub');
-					cb('error', '');
+					cb('error', '', '');
 				}
 			});
 		}).on('error', function (error) {
 			console.log('Error while requesting Metahub');
-			cb('error', '');
+			cb('error', '', '');
 		});
 	});
 }
+
+function getPhoto(hash, path, cb) {
+	pickupSRV(photohub_srv, function(record) {
+		var myurl = 'http://' + record.name + ':' + record.port + '/photos/hash/' + filename;
+		console.log('Uploading photo from PhotoHub: '+myurl);
+		request({uri: myurl}).on('response', function(response) {
+			var str = '';
+			response.on('data', function (chunk) { str += chunk; });
+			response.on('end', function () {
+				console.log("Got answer from Metahub: " + str);
+				var resp = JSON.parse(str);
+				if (resp) {
+					myPhoto = resp['photos'][0];
+					type = myPhoto['type'];
+					url = myPhoto['url'];
+					cb(false, url, type);
+				} else {
+					console.log('Bad response from Metahub');
+					cb('error', '', '');
+				}
+			});
+		});
+	});
+}
+
 
 module.exports = function(config){
 	var app = express(),
@@ -54,53 +80,44 @@ module.exports = function(config){
 	common = require('./common')(config);
 
 //	app.get(/.+\.(jpg|bmp|jpeg|gif|png|tif)$/i, function(req, res, next){
-	app.get(/.+$/i, function(req, res, next){
-		var filePath = path.join(staticFiles, req.path),
-		fstream;
-		var filename = path.parse(req.path).base;
+	app.get(/.+$/i, function(req, res, next){ 
+		var filePath, fstream;
 
 		console.log("Got request for " + config.urlRoot + req.path);
-
-		//filePath = decodeURI(filePath);
-
-		getMIMEtype(filename, function (e, type) {
+		getMetaData(filename, function (e, p, type) {
 			if (e) { 
 				console.log("Unable to get MIME type on MetaHub");
 				return common.error(req, res, next, 404, 'File not found', err);
 			}
 			console.log("Got from MetaHub type: " + type)
+			filePath = path.join(common.staticFiles + p);
 			fs.stat(filePath, function(err){
 				if (err){
-					console.log("Thumb not found: " + req.path);
-					tmpFile = tmp.fileSync();
-					pickupSRV(photohub_srv, function(record) {
-						var myurl = 'http://' + record.name + ':' + record.port + '/photos/hash/' + filename;
-						console.log('Uploading photo from PhotoHub: '+myurl);
-						jimp.read(myurl, function(err1, img) {
-							if (err1) {
-								console.log("Cannot download: " + err);
-								return common.error(req, res, next, 404, 'File not found', err1);
+					console.log("Thumb not found: " + filePath);
+					jimp.read(myurl, function(err1, img) {
+						if (err1) {
+							console.log("Cannot download: " + err);
+							return common.error(req, res, next, 404, 'File not found', err1);
+						}
+						img.getBuffer(type, function(err2, data){
+							if (err2) {
+								console.log("Cannot get buffer: " + err);
+								return common.error(req, res, next, 404, 'File not found', err2);
 							}
-							img.getBuffer(type, function(err2, data){
-								if (err2) {
-									console.log("Cannot get buffer: " + err);
-									return common.error(req, res, next, 404, 'File not found', err2);
-								}
-								jimp.read(data).then(function (image) {
-									console.log("Image: " + image.getMIME());
-									image.resize(256, jimp.AUTO).write(filePath, function(err3, img) {
-										if (err3) {
-											console.log("Cannot write final thumb: " + filePath + " err3: " + err3);
-											return common.error(req, res, next, 404, 'File not found', err3);
-										}
-										console.log("Successfully created thumb: " + filePath);
-										fstream = fs.createReadStream(filePath);
-										return fstream.pipe(res);
-									});
-								}).catch(function (e) {
-									console.log("Cannot read buffer: " + e);
-									return common.error(req, res, next, 404, 'File not found', err);
+							jimp.read(data).then(function (image) {
+								console.log("Image: " + image.getMIME());
+								image.resize(256, jimp.AUTO).write(filePath, function(err3, img) {
+									if (err3) {
+										console.log("Cannot write final thumb: " + filePath + " err3: " + err3);
+										return common.error(req, res, next, 404, 'File not found', err3);
+									}
+									console.log("Successfully created thumb: " + filePath);
+									fstream = fs.createReadStream(filePath);
+									return fstream.pipe(res);
 								});
+							}).catch(function (e) {
+								console.log("Cannot read buffer: " + e);
+								return common.error(req, res, next, 404, 'File not found', err);
 							});
 						});
 					});
