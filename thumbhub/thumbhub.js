@@ -75,9 +75,8 @@ module.exports = function(config){
 
 //	app.get(/.+\.(jpg|bmp|jpeg|gif|png|tif)$/i, function(req, res, next){
 	app.get(/.+$/i, function(req, res, next){ 
-		var filePath, fstream;
+		var hashPath, filePath, fstream;
 		var hash = path.basename(req.path);
-		var hashPath =  path.join(staticFiles + "/" + hash);
 		
 		console.log("Got request for " + config.urlRoot + req.path);
 		getMetaData(hash, function (e, p, type) {
@@ -85,11 +84,12 @@ module.exports = function(config){
 				console.log("Unable to get MIME type on MetaHub");
 				return common.error(req, res, next, 404, 'File not found', err);
 			}
-			console.log("Got from MetaHub type: " + type)
+			console.log("Got from MetaHub type: " + type);
+			hashPath = staticFiles + "/" + hash + path.extname(p);
 			fs.stat(hashPath, function(err){
 				if (err){
 					console.log("Thumb not found: " + hashPath);
-					filePath = path.join(staticFiles + "/" + p);
+					filePath = staticFiles + "/" + p;
 					getPhoto(hash, filePath, function (err) {
 						if (err) {
 							console.log("Cannot download: " + err);
@@ -102,14 +102,13 @@ module.exports = function(config){
 							}
 							
 							img.resize(256, jimp.AUTO);
-							hashPath2 = hashPath + p;
-							img.write(hashPath2, function(err3, i) {
+							img.write(hashPath, function(err3, i) {
 								if (err3) {
-									console.log("Cannot write final thumb: " + hashPath2 + " err3: " + err3);
+									console.log("Cannot write final thumb: " + hashPath + " err3: " + err3);
 									return common.error(req, res, next, 404, 'File not found', err3);
 								}
-								console.log("Successfully created thumb: " + hashPath2);
-								fstream = fs.createReadStream(hashPath2);
+								console.log("Successfully created thumb: " + hashPath);
+								fstream = fs.createReadStream(hashPath);
 								return fstream.pipe(res);
 							});
 						});
