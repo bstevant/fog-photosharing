@@ -97,7 +97,7 @@ module.exports = function(config){
 						}
 						jimp.read(filePath, function(err1, img) {
 							if (err1) {
-								console.log("Cannot read: " + err);
+								console.log("Cannot read: " + err1);
 								return common.error(req, res, next, 404, 'File not found', err1);
 							}
 							img.resize(256, jimp.AUTO)
