@@ -3,6 +3,7 @@ FROM python:onbuild
 WORKDIR /metahub
 
 COPY metahub.py ./
+COPY consuldb.py ./
 
 EXPOSE 5000
 
