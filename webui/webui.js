@@ -72,18 +72,20 @@ app.get('/nanoPhotosProvider.php', function (req,res) {
 	console.log("Rendering Photos JSON");
 	table = new Array();
 	render_function(res, function(r, photos) {
-		for (var i=0; i<photos.length; i++) {
-			e = new Object();
-			e.title = photos[i]["description"];
-			e.description = photos[i]["description"];
-			e.kind = 'image';
-			e.ID = photos[i]["uuid"];
-			e.albumID = '0'
-			e.src = 'photos/hash/' + photos[i]["hash"];
-			e.srct = 'thumbs/' + photos[i]["hash"];
-			e.imgWidth = 150
-			e.imgHeight = 100
-			table.push(e);
+		if (photos) {
+			for (var i=0; i<photos.length; i++) {
+				e = new Object();
+				e.title = photos[i]["description"];
+				e.description = photos[i]["description"];
+				e.kind = 'image';
+				e.ID = photos[i]["uuid"];
+				e.albumID = '0'
+				e.src = 'photos/hash/' + photos[i]["hash"];
+				e.srct = 'thumbs/' + photos[i]["hash"];
+				e.imgWidth = 150
+				e.imgHeight = 100
+				table.push(e);
+			}
 		}
 		r.setHeader('Content-Type', 'application/json');
 		r.send(JSON.stringify(table));

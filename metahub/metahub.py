@@ -107,7 +107,7 @@ def list_photos():
                 res.append(photo)
         return jsonify({'photos': res})
     else:
-        abort(404)
+        return jsonify({'photos': []})
 
 ####################################################################
 # Route POST /photos/
