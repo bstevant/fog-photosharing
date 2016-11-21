@@ -100,7 +100,12 @@ def update_album(uid):
 def list_photos():
     results = cdb.getall('photos','hash') 
     if len(results) >= 1:
-        return jsonify({'photos': results})
+        res = []
+        for h in results:
+            photo = cdb.get('photos', h, {'hash': '', 'url': '', 'type': '', 'timestamp': '', 'description': ''})
+            if photo['hash'] != '':
+                res.append(photo)
+        return jsonify({'photos': res})
     else:
         abort(404)
 

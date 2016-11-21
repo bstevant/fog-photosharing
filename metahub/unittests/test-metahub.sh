@@ -9,8 +9,8 @@ DESC1='{"description":"hello"}'
 #curl http://localhost:5000/photos
 #curl -H "Content-Type: application/json" -X POST -d $PHOTO2 http://localhost:5000/photos
 curl http://localhost:5000/photos
-curl http://localhost:5000/photos/aaa
-curl http://localhost:5000/photos/bbb
-curl -H "Content-Type: application/json" -X PUT -d $DESC1 http://localhost:5000/photos/bbb
-curl http://localhost:5000/photos/bbb
+#curl http://localhost:5000/photos/aaa
+#curl http://localhost:5000/photos/bbb
+#curl -H "Content-Type: application/json" -X PUT -d $DESC1 http://localhost:5000/photos/bbb
+#curl http://localhost:5000/photos/bbb
 

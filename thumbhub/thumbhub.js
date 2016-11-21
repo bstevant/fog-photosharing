@@ -24,7 +24,7 @@ function pickupSRV(name, cb) {
 
 function getMetaData(hash, cb) {
 	pickupSRV(metahub_srv, function(record) {
-		var myurl = 'http://' + record.name + ':' + record.port + '/photos?hash=' + hash;
+		var myurl = 'http://' + record.name + ':' + record.port + '/photos/' + hash;
 		console.log("Requesting Metahub: "+ myurl);
 		request({uri: myurl}).on('response', function(response) {
 			var str = '';

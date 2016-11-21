@@ -101,7 +101,6 @@ module.exports = function(config){
 	app.get(/hash\/.+$/i, function(req, res, next){
 		console.log("Got request for " + config.urlRoot + req.path);
 		var hash = path.parse(req.path).base;
-		// Get Content-type from MetaHub
 		
 		ipfs.files.get(hash, function(err, stream) {
 			if (err) {
