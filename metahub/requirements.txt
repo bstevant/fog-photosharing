@@ -1,3 +1,4 @@
 flask
 tinydb
 python-consul
+docopt

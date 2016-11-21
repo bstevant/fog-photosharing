@@ -169,10 +169,10 @@ def update_photo(hash):
 ####################################################################
 ####################################################################
 
-help="""Metahub (consul based)
+myhelp="""Metahub (consul based)
 
 Usage:
-    python metahub.py <ip of consul host> <port of consul host>
+    metahub.py <ip_of_consul_agent> <port_of_consul_agent>
 
 Options:
     -h --help
@@ -183,11 +183,11 @@ if __name__ == '__main__':
     #photos.insert(photo1)    
     #albums.insert(album1)    
     #app.run(host='0.0.0.0', port=5000, debug=True)
-    #arguments = docopt(help)
-    #print(arguments)
-    #if isinstance(arguments, dict):
-    #    consulhost = arguments["<ip of consul host>"]
-    #    consulport = arguments["<port of consul host>"]
+    arguments = docopt(myhelp)
+    print(arguments)
+    if isinstance(arguments, dict):
+        consulhost = arguments["<ip_of_consul_agent>"]
+        consulport = arguments["<port_of_consul_agent>"]
     cdb = ConsulDB('metahub', consulhost, consulport)
     app.run(host='::', port=5000)
     
