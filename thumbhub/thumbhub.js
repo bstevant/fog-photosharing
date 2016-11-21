@@ -53,7 +53,7 @@ function getPhoto(hash, path, cb) {
 		var myurl = 'http://' + record.name + ':' + record.port + '/photos/hash/' + hash;
 		console.log('Uploading photo from PhotoHub: '+myurl);
 		// Set timout for 42sec
-		request({url: myurl, agentOptions: { timeout: 420000 })
+		request({url: myurl, agentOptions: { timeout: 420000 }})
 		.on('error', function(err) {
 			cb(err);
 		})
