@@ -44,8 +44,8 @@ class ConsulDB():
         if isinstance(dictobj, dict): 
             for k in dictobj.keys():
                 thekey = self.sep.join((self.service, table, k, key))
-                print('CDB: PUT ' + thekey + " value: " + dictobj[k])
-                self.consul.put(thekey, dictobj[k])
+                print('CDB: PUT ' + thekey + " value: " + str(dictobj[k]))
+                self.consul.put(thekey, str(dictobj[k]))
             return dictobj
         else:
             return None

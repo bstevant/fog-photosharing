@@ -143,7 +143,7 @@ def get_photos(hash):
     if photo['hash'] == '':
         abort(404)
     else:
-        return jsonify({'photos': photo})
+        return jsonify({'photos': [photo]})
 
 ####################################################################
 # Route PUT /photos/<hash>
