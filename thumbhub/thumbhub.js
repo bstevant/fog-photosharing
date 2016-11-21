@@ -52,7 +52,8 @@ function getPhoto(hash, path, cb) {
 	pickupSRV(photohub_srv, function(record) {
 		var myurl = 'http://' + record.name + ':' + record.port + '/photos/hash/' + hash;
 		console.log('Uploading photo from PhotoHub: '+myurl);
-		request(myurl)
+		// Set timout for 42sec
+		request({url: myurl, agentOptions: { timeout: 420000 })
 		.on('error', function(err) {
 			cb(err);
 		})
@@ -92,7 +93,7 @@ module.exports = function(config){
 					getPhoto(hash, filePath, function (err) {
 						if (err) {
 							console.log("Cannot download: " + err);
-							return common.error(req, res, next, 404, 'File not found', err1);
+							return common.error(req, res, next, 404, 'File not found', err);
 						}
 						jimp.read(filePath, function(err1, img) {
 							if (err1) {
