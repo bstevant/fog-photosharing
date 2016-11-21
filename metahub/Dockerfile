@@ -4,7 +4,8 @@ WORKDIR /metahub
 
 COPY metahub.py ./
 COPY consuldb.py ./
+COPY run-metahub.sh ./
 
 EXPOSE 5000
 
-CMD ["python", "/metahub/metahub.py", "[fdd7:d924:3d5f:d0c4::1]", "8500"]
+CMD ["/bin/sh", "/metahub/run-metahub.sh"]
