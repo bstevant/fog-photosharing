@@ -45,7 +45,7 @@ class ConsulDB():
             for k in dictobj.keys():
                 thekey = self.sep.join((self.service, table, k, key))
                 print('CDB: PUT ' + thekey + " value: " + str(dictobj[k]))
-                self.consul.put(thekey, str(dictobj[k]))
+                self.consul.put(thekey, str(dictobj[k], 'utf-8'))
             return dictobj
         else:
             return None
