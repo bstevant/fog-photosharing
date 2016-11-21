@@ -1,17 +1,22 @@
 from flask import Flask, jsonify, abort, request, make_response, url_for
 from tinydb import TinyDB, where, Query
 import uuid, time
+import consul
+from docopt import docopt
+from consuldb import ConsulDB
 
-db = TinyDB('/metahub/db.json')
+db = TinyDB('./db.json')
 photos = db.table('photos')
 albums = db.table('albums')
+
+consulhost = "localhost"
+consulport = "8500"
 
 # Create unique UID in table
 def create_uniq_uid(table):
     uid = str(uuid.uuid4())
     q = Query()
     p = table.search(q.uuid == uid)
-    print(p)
     if len(p) >= 1:
         return create_uniq_uid(table)
     else:
@@ -20,7 +25,7 @@ def create_uniq_uid(table):
 app = Flask(__name__)
 
 @app.errorhandler(400)
-def not_found(error):
+def bad_request(error):
     return make_response(jsonify( { 'error': 'Bad Request' } ), 400)
 
 @app.errorhandler(404)
@@ -93,90 +98,93 @@ def update_album(uid):
 # Returns list of photos
 @app.route('/photos', methods=['GET'])
 def list_photos():
-    url = request.args.get('url')
-    h = request.args.get('hash')
-    if url != None:
-        q = Query()
-        p = photos.search(q.url == url)
-        if len(p) >= 1:
-            return jsonify({'photos': p})
-        else:
-            abort(404)
-    if h != None:
-        q = Query()
-        p = photos.search(q.hash == h)
-        if len(p) >= 1:
-            return jsonify({'photos': p})
-        else:
-            abort(404)
+    results = cdb.getall('photos','hash') 
+    if len(results) >= 1:
+        return jsonify({'photos': results})
     else:
-        return jsonify({'photos': photos.all()})
+        abort(404)
 
 ####################################################################
 # Route POST /photos/
 # Returns created photo
 @app.route('/photos', methods=['POST'])
 def create_photo():
-    if not request.json or not 'url' in request.json:
+    if not request.json \
+    or not 'hash' in request.json \
+    or not 'url' in request.json \
+    or not 'type' in request.json:    
         abort(400)
     if not 'timestamp' in request.json:
         request.json['timestamp'] = str(int(time.time())) 
     if not 'description' in request.json:
         request.json['description'] = ''
     photo = {
-        'uuid': create_uniq_uid(photos),
         'url': request.json['url'],
         'hash': request.json['hash'],
         'type': request.json['type'],
         'timestamp': request.json['timestamp'],
         'description': request.json['description']
     }
-    print("Created new photo entry uuid: " + photo['uuid'] + "url: " + photo['url'])
-    photos.insert(photo)
+    print("Created new photo entry hash: " + photo['hash'] + "url: " + photo['url'])
+    cdb.put('photos', request.json['hash'], photo)
     return jsonify({'photos': photo})
 
 ####################################################################
-# Route GET /photos/<uuid>
+# Route GET /photos/<hash>
 # Returns metadata for photo
-@app.route('/photos/<string:uid>', methods=['GET'])
-def get_photos(uid):
-    q = Query()
-    p = photos.search(q.uuid == uid)
-    if len(p) >= 1:
-        return jsonify({'photos': p})
-    if len(p) == 0:
+@app.route('/photos/<string:hash>', methods=['GET'])
+def get_photos(hash):
+    photo = cdb.get('photos', hash, {'hash': '', 'url': '', 'type': '', 'timestamp': '', 'description': ''})
+    if photo['hash'] == '':
         abort(404)
+    else:
+        return jsonify({'photos': photo})
 
 ####################################################################
-# Route PUT /photos/<uuid>
+# Route PUT /photos/<hash>
 # Returns updated photo
-@app.route('/photos/<string:uid>', methods=['PUT'])
-def update_photo(uid):
-    if not request.json \
-       or not 'description' in request.json :
+@app.route('/photos/<string:hash>', methods=['PUT'])
+def update_photo(hash):
+    if not request.json:
         abort(400)
-    q = Query()
-    p = photos.search(q.uuid == uid)
-    if len(p) == 0:
+    photo1 = cdb.get('photos', hash, {'hash': '', 'url': '', 'type': '', 'timestamp': '', 'description': ''})
+    if photo1['hash'] == '':
         abort(404)
-    p1 = p[0]
-    photo = {
-        'uuid': uid,
-        'url': p1['url'],
-        'hash': p1['hash'],
-        'timestamp': p1['timestamp'],
+    photo2 = {
+        'url': photo1['url'],
+        'hash': hash,
+        'type': photo1['type'],
+        'timestamp': photo1['timestamp'],
         'description': request.json['description']
     }
-    photos.update(photo, q.uuid == uid)
-    return jsonify({'photos': photo})
+    cdb.put('photos', hash, photo2)
+    return jsonify({'photos': photo2})
 
 
 ####################################################################
 ####################################################################
+
+help="""Metahub (consul based)
+
+Usage:
+    python metahub.py <ip of consul host> <port of consul host>
+
+Options:
+    -h --help
+"""
+
+
 if __name__ == '__main__':
     #photos.insert(photo1)    
     #albums.insert(album1)    
     #app.run(host='0.0.0.0', port=5000, debug=True)
+    #arguments = docopt(help)
+    #print(arguments)
+    #if isinstance(arguments, dict):
+    #    consulhost = arguments["<ip of consul host>"]
+    #    consulport = arguments["<port of consul host>"]
+    cdb = ConsulDB('metahub', consulhost, consulport)
     app.run(host='::', port=5000)
+    
 
 
