@@ -132,7 +132,7 @@ def create_photo():
     }
     print("Created new photo entry hash: " + photo['hash'] + "url: " + photo['url'])
     cdb.put('photos', request.json['hash'], photo)
-    return jsonify({'photos': photo})
+    return jsonify({'photos': [photo]})
 
 ####################################################################
 # Route GET /photos/<hash>
@@ -163,7 +163,7 @@ def update_photo(hash):
         'description': request.json['description']
     }
     cdb.put('photos', hash, photo2)
-    return jsonify({'photos': photo2})
+    return jsonify({'photos': [photo2]})
 
 
 ####################################################################

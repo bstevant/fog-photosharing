@@ -231,7 +231,7 @@ app.post("/photos", function (req, res) {
 								'hash': hash,
 								'type': type,
 								'url': encodeURIComponent(origName),
-								'timestamp': creationDate,
+								'timestamp': str(creationDate),
 								'description': origName
 							}
 						}, function (err){
