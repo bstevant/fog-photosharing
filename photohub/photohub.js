@@ -10,7 +10,7 @@ common;
 
 
 var metahub_srv = "bokeh-metahub.service.consul."
-var photohub_srv = "bokeh-photohub.service.consul."
+var photohub_srv = "bokeh-photohub-4001.service.consul."
 var thumbhub_srv = "bokeh-thumbhub.service.consul."
 
 function pickupSRV(name, func) {
@@ -24,11 +24,15 @@ function pickupSRV(name, func) {
 }
 
 
+
 module.exports = function(config){
 	var app = express(),
 	staticFiles = config.staticFiles,
 	common = require('./common')(config),
 	ipfs = ipfsAPI('localhost', '5001', {protocol: 'http'});
+
+	// EXPERIMENTAL: Make 
+
 
 	app.get(/.+\.(jpg|bmp|jpeg|gif|png|tif)$/i, function(req, res, next){
 		var filePath = path.join(staticFiles, req.path),
