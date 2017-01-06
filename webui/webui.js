@@ -26,9 +26,7 @@ function pickupSRV(name, func) {
 
 render_function = function(res, func) {
 	pickupSRV(metahub_srv, function(record) {
-		var myurl = url.parse("http://bokeh-metahub.service.consul:5000/photos");
-		myurl.hostname = record.name;
-		myurl.port = record.port;
+		var myurl = 'http://' + record.name + ':' + record.port + '/photos';
 		console.log("Requesting Metahub: "+url.format(myurl));
 		request({uri: myurl}).on('response', function(response) {
 			var str = '';
@@ -122,10 +120,8 @@ app.get(/thumbs\/.+$/i, function(req, res, next){
 //app.get(/thumbs\/.+(\.(png|jpg|bmp|jpeg|gif|tif))$/i, function (req, res) {
 	console.log("Get " + req.path);
 	pickupSRV(thumbhub_srv, function(record) {
-		var myurl = url.parse("http://bokeh-thumbhub.service.consul:3050"+req.path);
-		myurl.hostname = record.name;
-		myurl.port = record.port;
-		console.log("Proxying request to: "+url.format(myurl));
+		var myurl = 'http://' + record.name + ':' + record.port + req.path;
+		console.log("Proxying request to thumbhub: "+url.format(myurl));
 		request({uri: myurl}).on('response', function(response) {
 			response.on('data', function (chunk) { res.write(chunk); });
 			response.on('end', function () {
@@ -151,10 +147,8 @@ app.get(/thumbs\/.+$/i, function(req, res, next){
 app.get(/photos\/hash\/.+$/i, function(req, res, next){
 	console.log("Get " + req.path);
 	pickupSRV(photohub_srv, function(record) {
-		var myurl = url.parse("http://bokeh-photohub.service.dc1.consul:3000"+req.path);
-		myurl.hostname = record.name;
-		myurl.port = record.port;
-		console.log("Proxying request to: "+url.format(myurl));
+		var myurl = 'http://' + record.name + ':' + record.port + req.path;
+		console.log("Proxying request to photohub: " + myurl);
 		request({uri: myurl}).on('response', function(response) {
 			response.on('data', function (chunk) { res.write(chunk); });
 			response.on('end', function () {
