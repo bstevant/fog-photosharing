@@ -1,0 +1,20 @@
+- hosts: metahub
+  serial: 1
+  sudo: yes
+  roles:
+    - metahub
+- hosts: photohub
+  serial: 1
+  sudo: yes
+  roles:
+    - photohub
+- hosts: thumbhub
+  serial: 1
+  sudo: yes
+  roles:
+    - thumbhub
+- hosts: webui
+  serial: 1
+  sudo: yes
+  roles:
+    - webui

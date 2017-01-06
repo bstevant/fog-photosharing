@@ -1,0 +1,7 @@
+- name: Start WebUI container
+  docker:
+      name: webui
+      image: fog3.ipv6.enstb.fr:5000/bokeh-webui
+      ports: 8080
+      dns: {{ ip }}
+      state: started

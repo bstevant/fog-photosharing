@@ -1,0 +1,9 @@
+- name: Start WebUI container
+  docker:
+      name: photohub
+      image: fog3.ipv6.enstb.fr:5000/bokeh-photohub
+      ports: 
+      - 3000
+      - 4001
+      dns: {{ ip }}
+      state: started
