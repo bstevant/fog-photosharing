@@ -165,6 +165,19 @@ def update_photo(hash):
     cdb.put('photos', hash, photo2)
     return jsonify({'photos': [photo2]})
 
+####################################################################
+# Route DELETE /photos/<hash>
+# Returns empty array
+@app.route('/photos/<string:hash>', methods=['DELETE'])
+def delete_photo(hash):
+    if not request.json:
+        abort(400)
+    photo1 = cdb.get('photos', hash, {'hash': '', 'url': '', 'type': '', 'timestamp': '', 'description': ''})
+    if photo1['hash'] == '':
+        abort(404)
+    cdb.delete('photos', photo1)
+    return jsonify({'photos': []})
+
 
 ####################################################################
 ####################################################################
