@@ -249,14 +249,14 @@ app.post("/photos", function (req, res) {
 								'timestamp': creationDate.toString(),
 								'description': origName
 							}
-						}, function (err, resp, body){
-							if (err) {
-								console.log("Failed to upload description to Metahub!:" + origName + "Resp: " + resp);
+						}, function (err2, resp2, body2){
+							if (err2) {
+								console.log("Failed to upload description to Metahub!:" + origName + "Resp: " + resp2);
 								res.writeHead(500);
 								res.end();
 							}
-							console.log("Successfully uploaded description to Metahub: " + origName);
-							res.write(body)
+							console.log("Successfully uploaded description to Metahub: " + body2);
+							res.write(body2)
 							res.end();
 							return;
 						});
