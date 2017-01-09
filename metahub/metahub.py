@@ -175,7 +175,7 @@ def delete_photo(hash):
     photo1 = cdb.get('photos', hash, {'hash': '', 'url': '', 'type': '', 'timestamp': '', 'description': ''})
     if photo1['hash'] == '':
         abort(404)
-    cdb.delete('photos', photo1)
+    cdb.delete('photos', hash, photo1)
     return jsonify({'photos': []})
 
 
