@@ -1,2 +1,10 @@
-[bench]
-fog8.ipv6.enstb.fr
+[bench1]
+fog8.ipv6.enstb.fr webui_server=fog8.ipv6.enstb.fr
+fog9.ipv6.enstb.fr webui_server=fog8.ipv6.enstb.fr
+fog10.ipv6.enstb.fr webui_server=fog8.ipv6.enstb.fr
+fog11.ipv6.enstb.fr webui_server=fog8.ipv6.enstb.fr
+[bench2]
+fog8.ipv6.enstb.fr webui_server=fog8.ipv6.enstb.fr
+fog9.ipv6.enstb.fr webui_server=fog9.ipv6.enstb.fr
+fog10.ipv6.enstb.fr webui_server=fog9.ipv6.enstb.fr
+fog11.ipv6.enstb.fr webui_server=fogi11.ipv6.enstb.fr

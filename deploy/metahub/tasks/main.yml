@@ -6,5 +6,5 @@
       name: metahub
       image: fog3.ipv6.enstb.fr:5000/bokeh-metahub
       ports: 5000
-      dns: "{{ ip }}"
+      dns: "{{ ip }}"
       state: started

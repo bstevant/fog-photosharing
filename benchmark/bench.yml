@@ -1,6 +1,14 @@
-- hosts: bench
+- hosts: bench1
   serial: 1
   vars:
     webui_server: fog8.ipv6.enstb.fr
+    logs: bench1
+  roles:
+    - bench
+- hosts: bench2
+  serial: 1
+  vars:
+    webui_server: fog8.ipv6.enstb.fr
+    logs: bench2
   roles:
     - bench

@@ -8,5 +8,5 @@
       ports: 
       - 3000
       - 4001
-      dns: "{{ ip }}"
+      dns: "{{ ip }}"
       state: started
