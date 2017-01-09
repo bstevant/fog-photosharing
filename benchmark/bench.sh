@@ -1,5 +1,5 @@
 #WEBUI=http://[2a01:e35:8ae7:a760:76e5:43ff:fe3a:ead9]:32768
-WEBUI=http://[2001:660:7301:51:20d:b9ff:fe42:4d08]:32772
+WEBUI=http://[2001:660:7301:51:20d:b9ff:fe42:4d08]:32776
 HASH="QmUKsWHoKvn3r2waFv6fMMjEJBnk8f8KWz9BEmkSHxfbp3"
 function run() {
     number=$1
@@ -13,7 +13,7 @@ function run() {
 function upload_delete_img() {
 	convert -size 1280x720  plasma:fractal  test_img.png
 	echo "==== POST test_img.png"
-	curl -w "@curl-format2.txt" -o /dev/null -O result.json \
+	curl -w "@curl-format2.txt" -o /dev/null -o result.json \
 		 -F "file=@test_img.png" "$WEBUI/photos/"
 	#rm -f test_img.png
 }
