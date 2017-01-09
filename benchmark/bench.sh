@@ -6,8 +6,20 @@ function run() {
     shift
     for n in $(seq $number); do
       $@
+	  sleep 5
     done
 }
+
+function upload_delete_img() {
+	convert -size 1280x720  plasma:fractal  test_img.png
+	echo "==== POST test_img.png"
+	curl -w "@curl-format2.txt" -o /dev/null -O result.json \
+		 -F "file=@test_img.png" "$WEBUI/photos/"
+	#rm -f test_img.png
+}
+
+upload_delete_img
+exit 0 
 
 echo "==== GET /"
 run 3 curl -w "@curl-format2.txt" -o /dev/null -s "$WEBUI/"
