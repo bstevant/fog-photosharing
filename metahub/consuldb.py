@@ -23,7 +23,9 @@ class ConsulDB():
                 _, v = self.consul.get(thekey, separator=self.sep, recurse=False)
                 if v != None:
                     return { obj: str(v['Value'])
-        else :
+                else:
+                    return None
+        else:
             return None
     
     def getall(self, table, key):
