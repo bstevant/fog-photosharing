@@ -1,7 +1,10 @@
-- name: Start WebUI container
+- name: Pull image
+  shell: docker pull fog3.ipv6.enstb.fr:5000/bokeh-thumbhub
+
+- name: Start Thumbhub container
   docker:
       name: thumbhub
       image: fog3.ipv6.enstb.fr:5000/bokeh-thumbhub
       ports: 3050
-      dns: {{ ip }}
+      dns: "{{ ip }}"
       state: started
