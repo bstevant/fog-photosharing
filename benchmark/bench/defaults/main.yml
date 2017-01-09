@@ -1,0 +1,6 @@
+files: 
+  - { src: "curl-format2.txt", dest: "/tmp/", mode: "0644" }
+  - { src: "read_hash.py", dest: "/tmp/", mode: "0644" }
+
+templates: 
+  - { src: "bench.sh", dest: "/tmp/bench.sh", mode: "0755" }

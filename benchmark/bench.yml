@@ -1,0 +1,6 @@
+- hosts: bench
+  serial: 1
+  vars:
+    webui_server: fog8.ipv6.enstb.fr
+  roles:
+    - bench

@@ -1,0 +1,28 @@
+- name: Install preliminary packages
+  apt: name={{item}} state=present force=yes 
+  with_items:
+    - python
+    - imagemagick
+    - curl
+
+- name: Templates are present
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "{{ item.mode }}"
+  with_items: "{{ templates }}"
+
+- name: Files are present
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "{{ item.mode }}"
+  with_items: "{{ files }}"
+
+- name: Run bench
+  command: /tmp/bench.sh
+  args:
+      chdir: /tmp
+  register: bench_output
+
+- local_action: copy content="{{ bench_output.stdout_lines }}" dest="logs/current/bench-{{ hostname }}-{{ webui_server }}"
