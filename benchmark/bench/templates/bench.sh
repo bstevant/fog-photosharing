@@ -1,4 +1,5 @@
-#WEBUI=http://[2a01:e35:8ae7:a760:76e5:43ff:fe3a:ead9]:32768
+#!/bin/sh
+
 WEBUI=http://{{ webui_server }}:8080
 
 function run() {
