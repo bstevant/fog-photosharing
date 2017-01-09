@@ -1,5 +1,5 @@
 #WEBUI=http://[2a01:e35:8ae7:a760:76e5:43ff:fe3a:ead9]:32768
-WEBUI=http://[2001:660:7301:51:20d:b9ff:fe42:4d08]:32781
+WEBUI=http://[2001:660:7301:51:20d:b9ff:fe42:4d08]:32782
 HASH="QmUKsWHoKvn3r2waFv6fMMjEJBnk8f8KWz9BEmkSHxfbp3"
 function run() {
     number=$1

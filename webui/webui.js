@@ -255,8 +255,9 @@ app.post("/photos", function (req, res) {
 								res.writeHead(500);
 								res.end();
 							}
-							console.log("Successfully uploaded description to Metahub: " + body2);
-							res.write(body2)
+							b = JSON.stringify(body2)
+							console.log("Successfully uploaded description to Metahub: " + b);
+							res.write(b)
 							res.end();
 							return;
 						});
