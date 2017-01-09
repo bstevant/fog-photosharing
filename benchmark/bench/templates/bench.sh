@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 WEBUI=http://{{ webui_server }}:8080
 
@@ -12,23 +12,23 @@ function run() {
 }
 
 function get_frontpage() {
-	echo "GET / \c"
+	echo -n "GET / "
 	curl -w "@curl-format2.txt" -o /dev/null -s "$WEBUI/"
-	echo "GET /nanoProvider.php \c"
+	echo -n "GET /nanoProvider.php "
 	curl -w "@curl-format2.txt" -o /dev/null -s "$WEBUI/nanoPhotosProvider.php?albumID=0&_=1481673983982"
 }
 
 function upload_delete_img() {
 	convert -size 1280x720  plasma:fractal  test_img.png 2>/dev/null
-	echo "POST test_img.png \c"
+	echo -n "POST test_img.png "
 	curl -w "@curl-format2.txt" -o result.json -s \
 		 -F "file=@test_img.png" "$WEBUI/photos/"
 	GENHASH=`python read_hash.py`
-	echo "GET /thumbs/hash \c"
+	echo -n "GET /thumbs/hash "
 	curl -w "@curl-format2.txt" -o /dev/null -s "$WEBUI/photos/hash/$GENHASH"
-	echo "GET /photos/hash \c"
+	echo -n "GET /photos/hash "
 	curl -w "@curl-format2.txt" -o /dev/null -s "$WEBUI/thumbs/hash/$GENHASH"
-	echo "DELETE /photos/hash \c"
+	echo -n "DELETE /photos/hash "
 	curl -w "@curl-format2.txt" -X DELETE -s "$WEBUI/photos/$GENHASH"
 	rm -f test_img.png result.json
 }
