@@ -16,13 +16,13 @@ class ConsulDB():
                 thekey = self.sep.join((self.service, table, k, key))
                 _, v = self.consul.get(thekey, separator=self.sep, recurse=False)
                 if v != None and v['Value'] != None:
-                    obj[k] = str(v['Value'])
+                    obj[k] = str(v['Value'], 'utf8')
             return obj
         elif isinstance(obj, string):
                 thekey = self.sep.join((self.service, table, obj, key))
                 _, v = self.consul.get(thekey, separator=self.sep, recurse=False)
                 if v != None:
-                    return { obj: str(v['Value']) }
+                    return { obj: str(v['Value'], 'utf8') }
                 else:
                     return None
         else:
