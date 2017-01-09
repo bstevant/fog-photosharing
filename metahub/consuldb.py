@@ -22,7 +22,7 @@ class ConsulDB():
                 thekey = self.sep.join((self.service, table, obj, key))
                 _, v = self.consul.get(thekey, separator=self.sep, recurse=False)
                 if v != None:
-                    return { obj: str(v['Value'])
+                    return { obj: str(v['Value']) }
                 else:
                     return None
         else:
