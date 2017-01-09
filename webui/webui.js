@@ -167,6 +167,27 @@ app.get(/photos\/hash\/.+$/i, function(req, res, next){
 	});
 });
 
+// Proxy photo delete requests to photohub
+app.delete(/photos\/.+$/i, function(req, res, next){
+	console.log("Delete " + req.path);
+	pickupSRV(metahub_srv, function(record) {
+		var myurl = 'http://' + record.name + ':' + record.port + req.path;
+		console.log("Proxying request to metahub: " + myurl);
+		request({method: 'DELETE', uri: myurl}).on('response', function(response) {
+			response.on('end', function () {
+				res.end();
+			});
+			response.on('close', function(){
+				res.end();
+			});
+		}).on('error', function(e) {
+			console.log(e.message);
+			res.writeHead(500);
+			res.end();
+		}).end();
+	});
+});
+
 
 // Upload a photo
 app.post("/photos", function (req, res) {
