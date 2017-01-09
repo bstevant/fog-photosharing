@@ -50,11 +50,11 @@ class ConsulDB():
         else:
             return None
 
-    def delete(self, table, key, dictobj):
+    def delete(self, table, key):
         if isinstance(dictobj, dict): 
             for k in dictobj.keys():
                 thekey = self.sep.join((self.service, table, k, key))
-                print('CDB: DELETE ' + thekey + " value: " + str(dictobj[k]))
+                print('CDB: DELETE ' + thekey)
                 self.consul.delete(thekey, recurse=False)
             return dictobj
         else:
