@@ -1,14 +1,30 @@
 [webui]
-fog8.ipv6.enstb.fr
-fog9.ipv6.enstb.fr
-fog10.ipv6.enstb.fr
-fog11.ipv6.enstb.fr
+fog8.ipv6.enstb.fr present=true
+fog9.ipv6.enstb.fr present=true
+fog10.ipv6.enstb.fr present=true
+fog11.ipv6.enstb.fr present=true
 
 [metahub]
-fog8.ipv6.enstb.fr
+fog8.ipv6.enstb.fr present=true
+fog9.ipv6.enstb.fr present=false
+fog10.ipv6.enstb.fr present=false
+fog11.ipv6.enstb.fr present=false
 
 [photohub]
-fog8.ipv6.enstb.fr
+fog8.ipv6.enstb.fr present=true
+fog9.ipv6.enstb.fr present=false
+fog10.ipv6.enstb.fr present=false
+fog11.ipv6.enstb.fr present=false
 
 [thumbhub]
-fog8.ipv6.enstb.fr
+fog8.ipv6.enstb.fr present=true
+fog9.ipv6.enstb.fr present=false
+fog10.ipv6.enstb.fr present=false
+fog11.ipv6.enstb.fr present=false
+
+[bench]
+fog8.ipv6.enstb.fr webui_server=fog8.ipv6.enstb.fr logs=uc1
+fog9.ipv6.enstb.fr webui_server=fog9.ipv6.enstb.fr logs=uc1
+fog10.ipv6.enstb.fr webui_server=fog10.ipv6.enstb.fr logs=uc1
+fog11.ipv6.enstb.fr webui_server=fog11.ipv6.enstb.fr logs=uc1
+

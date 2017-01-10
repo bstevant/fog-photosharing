@@ -1,5 +1,6 @@
 - name: Pull image
   shell: docker pull fog3.ipv6.enstb.fr:5000/bokeh-webui
+  when: present
 
 - name: Start WebUI container
   docker:
@@ -8,3 +9,11 @@
       ports: 8080:8080
       dns: "{{ ip }}"
       state: started
+  when: present
+
+- name: Stop WebUI container
+  docker:
+      name: webui
+      image: fog3.ipv6.enstb.fr:5000/bokeh-webui
+      state: absent
+  when: not present

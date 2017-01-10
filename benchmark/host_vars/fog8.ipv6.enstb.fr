@@ -1,7 +1,0 @@
-ansible_ssh_private_key_file: /vagrant/ansible/.ssh/id_ecdsa
-ansible_ssh_user: fogadmin
-hostname: fog8
-ip: 2001:660:7301:51:20d:b9ff:fe42:4d08
-consul_extra: ""
-consul_master_ip: fog3n0.ipv6.enstb.fr
-egress_if: eth0

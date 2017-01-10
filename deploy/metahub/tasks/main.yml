@@ -1,5 +1,6 @@
 - name: Pull image
   shell: docker pull fog3.ipv6.enstb.fr:5000/bokeh-metahub
+  when: present
 
 - name: Start Metahub container
   docker:
@@ -8,3 +9,12 @@
       ports: 5000
       dns: "{{ ip }}"
       state: started
+  when: present
+
+- name: Stop Metahub container
+  docker:
+      name: metahub
+      image: fog3.ipv6.enstb.fr:5000/bokeh-metahub
+      state: absent
+  ignore_errors: yes
+  when: not present

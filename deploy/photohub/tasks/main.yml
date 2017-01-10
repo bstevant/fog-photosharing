@@ -1,5 +1,6 @@
 - name: Pull image
   shell: docker pull fog3.ipv6.enstb.fr:5000/bokeh-photohub
+  when: present
 
 - name: Start Photohub container
   docker:
@@ -10,3 +11,12 @@
       - 4001
       dns: "{{ ip }}"
       state: started
+  when: present
+
+- name: Stop Photohub container
+  docker:
+      name: photohub
+      image: fog3.ipv6.enstb.fr:5000/bokeh-photohub
+      state: absent
+  ignore_errors: yes
+  when: not present
