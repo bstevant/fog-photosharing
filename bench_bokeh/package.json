@@ -1,0 +1,20 @@
+{
+    "author": "Bruno STEVANT",
+    "name": "bench-bokeh",
+    "description": "Bench Bokeh Microservices",
+    "version": "1.0.0",
+    "homepage": "https://github.com/bstevant/fog-photosharing",
+    "repository": {
+        "url": ""
+    },
+    "engines": {
+        "node": ">=0.6.2"
+    },
+    "dependencies": {
+        "underscore": ">=1.8.3",
+        "request": ">=2.75.0"
+    },
+    "scripts": {
+        "start": "node bench-bokeh.js"
+    }
+}

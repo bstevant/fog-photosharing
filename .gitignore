@@ -38,3 +38,6 @@ jspm_packages
 
 # Python bin cache
 __pycache__
+
+# MacOS Finder
+.DS_Store
