@@ -33,15 +33,15 @@ function bench_metahub() {
 				var end = new Date() - start;
 				console.log("MH_Bench1: result: %dms", end)
 			});
-		});
-	
-		myurl = 'http://' + record.name + ':' + record.port + '/photos/' + photo_hash;
-		//console.log("MH_Bench2: Get one photo");
-		start = new Date();
-		request({uri: myurl}).on('response', function(response) {
-			response.on('end', function () {
-				var end = new Date() - start;
-				console.log("MH_Bench2: result: %dms", end)
+			
+			myurl = 'http://' + record.name + ':' + record.port + '/photos/' + photo_hash;
+			//console.log("MH_Bench2: Get one photo");
+			start = new Date();
+			request({uri: myurl}).on('response', function(response) {
+				response.on('end', function () {
+					var end = new Date() - start;
+					console.log("MH_Bench2: result: %dms", end)
+				});
 			});
 		});
 	});
@@ -57,28 +57,30 @@ function bench_photohub() {
 				var end = new Date() - start;
 				console.log("PH_Bench1: result: %dms", end)
 			});
-		});
-		
-		var imgPath = "/bench_bokeh/test_img.png"
-		var formData = {
-			custom_file: {
-				value: fs.createReadStream(imgPath),
-				options: {
-					filename: "test_img.png"
+			
+			var imgPath = "/bench_bokeh/test_img.png"
+			var formData = {
+				custom_file: {
+					value: fs.createReadStream(imgPath),
+					options: {
+						filename: "test_img.png"
+					}
 				}
 			}
-		}
-		myurl = 'http://' + record.name + ':' + record.port + '/photos/';
-		//console.log("MH_Bench2: Get one photo");
-		start = new Date();
-		request.post({url: myurl, formData: formData}, function (err, resp, body){
-			if (err) {
-				console.log("Failed to upload image to Photohub!:" + err);
-			} else {
-				var end = new Date() - start;
-				console.log("PH_Bench2: result: %dms", end)
-			}
+			myurl = 'http://' + record.name + ':' + record.port + '/photos/';
+			//console.log("MH_Bench2: Get one photo");
+			start = new Date();
+			request.post({url: myurl, formData: formData}, function (err, resp, body){
+				if (err) {
+					console.log("Failed to upload image to Photohub!:" + err);
+				} else {
+					var end = new Date() - start;
+					console.log("PH_Bench2: result: %dms", end)
+				}
+			});
 		});
+		
+		
 	});
 }
 
