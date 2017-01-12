@@ -73,7 +73,7 @@ function bench_photohub() {
 		start = new Date();
 		request.post({url: myurl, formData: formData}, function (err, resp, body){
 			if (err) {
-				console.log("Failed to upload image to Photohub!:" + origName);
+				console.log("Failed to upload image to Photohub!:" + err);
 			} else {
 				var end = new Date() - start;
 				console.log("PH_Bench2: result: %dms", end)
