@@ -59,12 +59,12 @@ function bench_photohub() {
 			});
 		});
 		
-		var imgPath = "/bench_bokeh/temp_img.png"
+		var imgPath = "/bench_bokeh/test_img.png"
 		var formData = {
 			custom_file: {
 				value: fs.createReadStream(imgPath),
 				options: {
-					filename: "temp_img.png"
+					filename: "test_img.png"
 				}
 			}
 		}
