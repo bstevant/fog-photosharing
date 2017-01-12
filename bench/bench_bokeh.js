@@ -76,7 +76,7 @@ function bench_photohub() {
 			} else {
 				var end = new Date() - start;
 				console.log("PH_Bench2: result: %dms", end)
-			});
+			}
 		});
 	});
 }
