@@ -1,6 +1,6 @@
 - name: Pull image
   shell: docker pull fog3.ipv6.enstb.fr:5000/bokeh-photohub
-  when: present
+  when: ph_present is defined
 
 - name: Start Photohub container
   docker:
@@ -10,8 +10,9 @@
       - 3000
       - 4001
       dns: "{{ ip }}"
+      restart_policy: on-failure
       state: started
-  when: present
+  when: ph_present is defined
 
 - name: Stop Photohub container
   docker:
@@ -19,4 +20,4 @@
       image: fog3.ipv6.enstb.fr:5000/bokeh-photohub
       state: absent
   ignore_errors: yes
-  when: not present
+  when: ph_present is undefined

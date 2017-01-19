@@ -1,6 +1,6 @@
 - name: Pull image
   shell: docker pull fog3.ipv6.enstb.fr:5000/bokeh-thumbhub
-  when: present
+  when: th_present is defined
 
 - name: Start Thumbhub container
   docker:
@@ -8,8 +8,9 @@
       image: fog3.ipv6.enstb.fr:5000/bokeh-thumbhub
       ports: 3050
       dns: "{{ ip }}"
+      restart_policy: on-failure
       state: started
-  when: present
+  when: th_present is defined
 
 - name: Stop Thumbhub container
   docker:
@@ -17,4 +18,4 @@
       image: fog3.ipv6.enstb.fr:5000/bokeh-thumbhub
       state: absent
   ignore_errors: yes
-  when: not present
+  when: th_present is undefined
