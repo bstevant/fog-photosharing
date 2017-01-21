@@ -17,37 +17,74 @@ nodes = [
 ]
 
 #for dirname in os.listdir('logs'):
-for node in nodes:
-    results = {}
-    for uc in usecases:
-        server = ""
-        if uc == "uc0":
-            server = "g6fog"
-        elif uc == "uc1":
-            server = "fog11"
-        elif uc == "uc2":
-            server = node
-        text_file = open("logs/current/" + uc + "-" + node + "-" + server + ".ipv6.enstb.fr", "r")
-        lines = text_file.readlines()
-        l = lines[0]
-        resarray = eval(l)
-        for res in resarray:
-            r = res.split(":")
-            test = r[0]
-            value = float(r[1])
-            if test not in results.keys():
-                results[test] = {}
-            if uc not in results[test].keys():
-                results[test][uc] = []
-            results[test][uc].append(value)
-        text_file.close()
-    for test in results.keys():
-        s = ""
+def output_by_node():
+    for node in nodes:
+        results = {}
         for uc in usecases:
-            avg = np.average(results[test][uc])
-            s += uc + ": " + str(avg) + " "
-        print node + " " + test + " " + s
+            server = ""
+            if uc == "uc0":
+                server = "g6fog"
+            elif uc == "uc1":
+                server = "fog11"
+            elif uc == "uc2":
+                server = node
+            text_file = open("logs/current/" + uc + "-" + node + "-" + server + ".ipv6.enstb.fr", "r")
+            lines = text_file.readlines()
+            l = lines[0]
+            resarray = eval(l)
+            for res in resarray:
+                r = res.split(":")
+                test = r[0]
+                value = float(r[1])
+                if test not in results.keys():
+                    results[test] = {}
+                if uc not in results[test].keys():
+                    results[test][uc] = []
+                results[test][uc].append(value)
+            text_file.close()
+        for test in results.keys():
+            s = ""
+            for uc in usecases:
+                avg = np.average(results[test][uc])
+                s += uc + ": " + str(avg) + " "
+            print node + " " + test + " " + s
             
+def output_by_test():
+    results = {}
+    for node in nodes:
+        for uc in usecases:
+            server = ""
+            if uc == "uc0":
+                server = "g6fog"
+            elif uc == "uc1":
+                server = "fog11"
+            elif uc == "uc2":
+                server = node
+            text_file = open("logs/current/" + uc + "-" + node + "-" + server + ".ipv6.enstb.fr", "r")
+            lines = text_file.readlines()
+            l = lines[0]
+            resarray = eval(l)
+            for res in resarray:
+                r = res.split(":")
+                test = r[0]
+                value = float(r[1])
+                if test not in results.keys():
+                    results[test] = {}
+                if node not in results[test].keys():
+                    results[test][node] = {}
+                if uc not in results[test][node].keys():
+                    results[test][node][uc] = []
+                results[test][node][uc].append(value)
+            text_file.close()
+    for test in results.keys():
+        for node in results[test].keys():
+            s = ""
+            for uc in usecases:
+                avg = np.average(results[test][node][uc])
+                s += uc + ": " + str(avg) + " "
+            print test + " " + node + " " + s
+
+output_by_test()
 #for k in pairs:
 #    avg = np.average(results[pair])
 #    std = int(np.std(results[pair]) * 100 / avg)
