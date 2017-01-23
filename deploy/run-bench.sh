@@ -1,4 +1,4 @@
 #ansible-playbook deploy-bench.yml -i hosts/uc0
-#ansible-playbook deploy-bench.yml -i hosts/uc1
-ansible-playbook deploy-bench.yml -i hosts/uc3
-ansible-playbook deploy-bench.yml -i hosts/uc2
+ansible-playbook deploy-bench.yml -i hosts/uc4
+ansible-playbook deploy-bench.yml -i hosts/uc5
+ansible-playbook deploy-bench.yml -i hosts/uc6
