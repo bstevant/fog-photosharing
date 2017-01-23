@@ -6,30 +6,30 @@ fog11.ipv6.enstb.fr ui_present=true
 fog12.ipv6.enstb.fr ui_present=true
 
 [metahub]
-fog8.ipv6.enstb.fr mh_present=true 
-#fog9.ipv6.enstb.fr
-fog10.ipv6.enstb.fr
-fog11.ipv6.enstb.fr 
-fog12.ipv6.enstb.fr 
-
-[photohub]
 fog8.ipv6.enstb.fr 
 #fog9.ipv6.enstb.fr
 fog10.ipv6.enstb.fr
+fog11.ipv6.enstb.fr mh_present=true 
+fog12.ipv6.enstb.fr 
+
+[photohub]
+fog8.ipv6.enstb.fr ph_present=true 
+#fog9.ipv6.enstb.fr
+fog10.ipv6.enstb.fr
 fog11.ipv6.enstb.fr
-fog12.ipv6.enstb.fr ph_present=true 
+fog12.ipv6.enstb.fr 
 
 [thumbhub]
 fog8.ipv6.enstb.fr
 #fog9.ipv6.enstb.fr
 fog10.ipv6.enstb.fr
-fog11.ipv6.enstb.fr th_present=true
-fog12.ipv6.enstb.fr 
+fog11.ipv6.enstb.fr
+fog12.ipv6.enstb.fr th_present=true 
 
 [bench]
-fog8.ipv6.enstb.fr webui_server=fog8.ipv6.enstb.fr logs=uc4
+fog8.ipv6.enstb.fr webui_server=fog8.ipv6.enstb.fr logs=uc5
 #fog9.ipv6.enstb.fr webui_server=fog9.ipv6.enstb.fr logs=uc3
-fog10.ipv6.enstb.fr webui_server=fog10.ipv6.enstb.fr logs=uc4
-fog11.ipv6.enstb.fr webui_server=fog11.ipv6.enstb.fr logs=uc4
-fog12.ipv6.enstb.fr webui_server=fog12.ipv6.enstb.fr logs=uc4
+fog10.ipv6.enstb.fr webui_server=fog10.ipv6.enstb.fr logs=uc5
+fog11.ipv6.enstb.fr webui_server=fog11.ipv6.enstb.fr logs=uc5
+fog12.ipv6.enstb.fr webui_server=fog12.ipv6.enstb.fr logs=uc5
 
