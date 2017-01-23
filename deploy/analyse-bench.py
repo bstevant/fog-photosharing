@@ -2,31 +2,36 @@ import os
 import numpy as np
 
 
-uc = "uc0"
 usecases = [
     "uc0",
     "uc1",
-    "uc2"
+    "uc2",
+    "uc3",
+    "uc4",
+    "uc5",
+    "uc6"
 ]
 
 nodes = [
     "fog8",
-    "fog9",
+#    "fog9",
     "fog10",
-    "fog11"
+    "fog11",
+    "fog12"
 ]
 
 #for dirname in os.listdir('logs'):
-def output_by_node():
+def output_by_node(mynode = ""):
+    results = {}
     for node in nodes:
-        results = {}
+        results[node] = {}
         for uc in usecases:
             server = ""
             if uc == "uc0":
                 server = "g6fog"
             elif uc == "uc1":
                 server = "fog11"
-            elif uc == "uc2":
+            else:
                 server = node
             text_file = open("logs/current/" + uc + "-" + node + "-" + server + ".ipv6.enstb.fr", "r")
             lines = text_file.readlines()
@@ -36,20 +41,18 @@ def output_by_node():
                 r = res.split(":")
                 test = r[0]
                 value = float(r[1])
-                if test not in results.keys():
-                    results[test] = {}
-                if uc not in results[test].keys():
-                    results[test][uc] = []
-                results[test][uc].append(value)
+                if test not in results[node].keys():
+                    results[node][test] = {}
+                if uc not in results[node][test].keys():
+                    results[node][test][uc] = []
+                results[node][test][uc].append(value)
             text_file.close()
-        for test in results.keys():
-            s = ""
-            for uc in usecases:
-                avg = np.average(results[test][uc])
-                s += uc + ": " + str(avg) + " "
-            print node + " " + test + " " + s
-            
-def output_by_test():
+    if mynode == "":
+        return results
+    elif mynode in results.keys():
+        return { mynode: results[mytest] }
+
+def output_by_test(mytest = ""):
     results = {}
     for node in nodes:
         for uc in usecases:
@@ -58,7 +61,7 @@ def output_by_test():
                 server = "g6fog"
             elif uc == "uc1":
                 server = "fog11"
-            elif uc == "uc2":
+            else:
                 server = node
             text_file = open("logs/current/" + uc + "-" + node + "-" + server + ".ipv6.enstb.fr", "r")
             lines = text_file.readlines()
@@ -67,25 +70,41 @@ def output_by_test():
             for res in resarray:
                 r = res.split(":")
                 test = r[0]
-                value = float(r[1])
+                try:
+                    value = float(r[1])
+                except:
+                    value = 0
                 if test not in results.keys():
                     results[test] = {}
                 if node not in results[test].keys():
                     results[test][node] = {}
                 if uc not in results[test][node].keys():
                     results[test][node][uc] = []
-                results[test][node][uc].append(value)
+                if value != 0:
+                    results[test][node][uc].append(value)
             text_file.close()
-    for test in results.keys():
-        for node in results[test].keys():
+    if mytest == "":
+        return results
+    elif mytest in results.keys():
+        return { mytest: results[mytest] }
+
+def print_results(results, output="plain"):
+    if output == "csv":
+        print "node uc0 uc1 uc2 uc3"
+    for k1 in results.keys():
+        for k2 in results[k1].keys():
             s = ""
             for uc in usecases:
-                avg = np.average(results[test][node][uc])
-                s += uc + ": " + str(avg) + " "
-            print test + " " + node + " " + s
+                avg = np.average(results[k1][k2][uc])
+                s += str(avg) + " "
+            if output == "plain":
+                print k1 + " " + k2 + " " + s
+            if output == "csv":
+                print k2 + " " + s
 
-output_by_test()
-#for k in pairs:
-#    avg = np.average(results[pair])
-#    std = int(np.std(results[pair]) * 100 / avg)
-#    print pair + ": " + str(avg) + " dev: " + str(std) + "% (" + str(len(results[pair])) + " results)"
+#print_results(output_by_test())
+print_results(output_by_test("GET / "), "csv")
+#print_results(output_by_test("GET /nanoProvider.php "), "csv")
+#print_results(output_by_test("GET /photos/hash "), "csv")
+#print_results(output_by_test("POST test_img.png "), "csv")
+#print_results(output_by_test("GET /thumbs/hash "), "csv")
