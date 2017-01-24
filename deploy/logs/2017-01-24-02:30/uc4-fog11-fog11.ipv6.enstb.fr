@@ -1,0 +1,1 @@
+["GET / :  0.866", "GET /nanoProvider.php :  0.597", "GET / :  0.880", "GET /nanoProvider.php :  0.605", "POST test_img.png :  1.757", "GET /thumbs/hash :  2.485", "GET /photos/hash :  7.332", "DELETE /photos/hash :  0.283", "POST test_img.png :  1.742", "GET /thumbs/hash :  2.500", "GET /photos/hash :  6.625", "DELETE /photos/hash :  0.297"]
