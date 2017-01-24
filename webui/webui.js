@@ -170,7 +170,7 @@ app.get(/photos\/hash\/.+$/i, function(req, res, next){
 
 // Proxy photo requests to photohub (faster?)
 //app.get(/photos\/.+(\.(jpg|bmp|jpeg|gif|png|tif))$/i, function (req, res) {
-app.get(/photos2\/hash\/.+$/i, function(req, res, next){
+app.get(/photox\/hash\/.+$/i, function(req, res, next){
 	console.log("Get " + req.path);
 	var tmpobj = tmp.fileSync();
 	pickupSRV(photohub_srv, function(record) {
