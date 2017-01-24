@@ -177,7 +177,7 @@ app.get(/photox\/hash\/.+$/i, function(req, res, next){
 	mypath = a.join('/');
 	var tmpobj = tmp.fileSync();
 	pickupSRV(photohub_srv, function(record) {
-		var myurl = 'http://' + record.name + ':' + record.port + req.path;
+		var myurl = 'http://' + record.name + ':' + record.port + mypath;
 		console.log('Uploading photo from PhotoHub: '+myurl);
 		// Set timout for 42sec
 		request({url: myurl, agentOptions: { timeout: 420000 }})
