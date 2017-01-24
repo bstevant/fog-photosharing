@@ -173,8 +173,8 @@ app.get(/photos\/hash\/.+$/i, function(req, res, next){
 app.get(/photox\/hash\/.+$/i, function(req, res, next){
 	console.log("Get " + req.path);
 	a = req.path.split('/');
-	a[0]= 'photos';
-	mypath = path.join(a);
+	a[1]= 'photos';
+	mypath = a.join('/');
 	var tmpobj = tmp.fileSync();
 	pickupSRV(photohub_srv, function(record) {
 		var myurl = 'http://' + record.name + ':' + record.port + req.path;
