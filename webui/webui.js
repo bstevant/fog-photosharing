@@ -6,6 +6,7 @@ var path = require('path');
 var url = require('url');
 var request = require('request');
 var dns = require('dns');
+var tmp = require('tmp');
 
 var metahub_srv = "bokeh-metahub.service.consul."
 var photohub_srv = "bokeh-photohub-3000.service.consul."
@@ -167,6 +168,33 @@ app.get(/photos\/hash\/.+$/i, function(req, res, next){
 	});
 });
 
+// Proxy photo requests to photohub (faster?)
+//app.get(/photos\/.+(\.(jpg|bmp|jpeg|gif|png|tif))$/i, function (req, res) {
+app.get(/photos2\/hash\/.+$/i, function(req, res, next){
+	console.log("Get " + req.path);
+	var tmpobj = tmp.fileSync();
+	pickupSRV(photohub_srv, function(record) {
+		var myurl = 'http://' + record.name + ':' + record.port + '/photos/hash/' + hash;
+		console.log('Uploading photo from PhotoHub: '+myurl);
+		// Set timout for 42sec
+		request({url: myurl, agentOptions: { timeout: 420000 }})
+		.on('error', function(err) {
+			res.writeHead(500);
+			res.end();
+		})
+		.on('response', function(response) {
+			console.log("Reply from photohub: " + response.statusCode);
+			response.on('end', function () {
+				console.log("Written file: " + tmpobj.name);
+				fstream = fs.createReadStream(tmpobj.name);
+				return fstream.pipe(res);
+			});
+		}).pipe(fs.createWriteStream(tmpobj.name));
+	});
+});
+
+
+
 // Proxy photo delete requests to photohub
 app.delete(/photos\/.+$/i, function(req, res, next){
 	console.log("Delete " + req.path);
@@ -268,7 +296,6 @@ app.post("/photos", function (req, res) {
 	});
 	form.parse(req);
 });
-
 
 
 
