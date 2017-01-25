@@ -53,7 +53,7 @@ app.set('view engine', 'pug');
 // Render full page
 app.get('/', function (req, res) {
 	console.log("Rendering whole page");
-	r.render('index', { title: 'Hey', message: 'Hello there!'});
+	res.render('index', { title: 'Hey', message: 'Hello there!'});
 });
 
 // Render div containing list of photos
