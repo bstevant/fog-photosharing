@@ -1,0 +1,39 @@
+[webui]
+g6fog.ipv6.enstb.fr
+fog8.ipv6.enstb.fr 
+fog9a.ipv6.enstb.fr ui_present=true
+#fog10.ipv6.enstb.fr
+fog11.ipv6.enstb.fr 
+#fog12.ipv6.enstb.fr 
+
+[metahub]
+g6fog.ipv6.enstb.fr
+fog8.ipv6.enstb.fr 
+fog9a.ipv6.enstb.fr mh_present=true
+#fog10.ipv6.enstb.fr 
+fog11.ipv6.enstb.fr
+#fog12.ipv6.enstb.fr 
+
+[photohub]
+g6fog.ipv6.enstb.fr
+fog8.ipv6.enstb.fr 
+fog9a.ipv6.enstb.fr ph_present=true
+#fog10.ipv6.enstb.fr
+fog11.ipv6.enstb.fr
+#fog12.ipv6.enstb.fr 
+
+[thumbhub]
+g6fog.ipv6.enstb.fr 
+fog8.ipv6.enstb.fr
+fog9a.ipv6.enstb.fr th_present=true
+#fog10.ipv6.enstb.fr
+fog11.ipv6.enstb.fr
+#fog12.ipv6.enstb.fr 
+
+[bench]
+fog8.ipv6.enstb.fr   webui_server=fog9a.ipv6.enstb.fr logs=uc0c
+fog9a.ipv6.enstb.fr  webui_server=fog9a.ipv6.enstb.fr logs=uc0c
+fog10.ipv6.enstb.fr  webui_server=fog9a.ipv6.enstb.fr logs=uc0c
+fog11.ipv6.enstb.fr  webui_server=fog9a.ipv6.enstb.fr logs=uc0c
+#fog12.ipv6.enstb.fr webui_server=fog9a.ipv6.enstb.fr logs=uc0c
+g6fog.ipv6.enstb.fr  webui_server=fog9a.ipv6.enstb.fr logs=uc0c
