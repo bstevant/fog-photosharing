@@ -3,37 +3,36 @@ import numpy as np
 
 
 usecases = [
-    "uc0",
-    "uc1",
-    "uc2",
-    "uc3",
-    "uc4",
-    "uc5",
-    "uc6"
+#    "uc0",
+#    "uc1",
+#    "uc2",
+#    "uc3",
+#    "uc4",
+#    "uc5",
+#    "uc7",
+#    "uc8",
+#    "uc9",
+    "uc0a",
+    "uc0b",
+    "uc0c",
+    "uc0d"
 ]
 
 nodes = [
     "fog8",
-#    "fog9",
+    "fog9a",
     "fog10",
     "fog11",
-    "fog12"
+    "g6fog",
+#    "fog12"
 ]
 
-#for dirname in os.listdir('logs'):
 def output_by_node(mynode = ""):
     results = {}
     for node in nodes:
         results[node] = {}
         for uc in usecases:
-            server = ""
-            if uc == "uc0":
-                server = "g6fog"
-            elif uc == "uc1":
-                server = "fog11"
-            else:
-                server = node
-            text_file = open("logs/current/" + uc + "-" + node + "-" + server + ".ipv6.enstb.fr", "r")
+            text_file = open("logs/current/" + uc + "-" + node, "r")
             lines = text_file.readlines()
             l = lines[0]
             resarray = eval(l)
@@ -56,33 +55,30 @@ def output_by_test(mytest = ""):
     results = {}
     for node in nodes:
         for uc in usecases:
-            server = ""
-            if uc == "uc0":
-                server = "g6fog"
-            elif uc == "uc1":
-                server = "fog11"
-            else:
-                server = node
-            text_file = open("logs/current/" + uc + "-" + node + "-" + server + ".ipv6.enstb.fr", "r")
-            lines = text_file.readlines()
-            l = lines[0]
-            resarray = eval(l)
-            for res in resarray:
-                r = res.split(":")
-                test = r[0]
+            for dirname in os.listdir('logs'):
                 try:
-                    value = float(r[1])
+                    text_file = open("logs/" + dirname + "/" + uc + "-" + node, "r")
+                    lines = text_file.readlines()
+                    l = lines[0]
+                    resarray = eval(l)
+                    for res in resarray:
+                        r = res.split(":")
+                        test = r[0]
+                        try:
+                            value = float(r[1])
+                        except:
+                            value = 0
+                        if test not in results.keys():
+                            results[test] = {}
+                        if node not in results[test].keys():
+                            results[test][node] = {}
+                        if uc not in results[test][node].keys():
+                            results[test][node][uc] = []
+                        if value != 0:
+                            results[test][node][uc].append(value)
+                    text_file.close()
                 except:
-                    value = 0
-                if test not in results.keys():
-                    results[test] = {}
-                if node not in results[test].keys():
-                    results[test][node] = {}
-                if uc not in results[test][node].keys():
-                    results[test][node][uc] = []
-                if value != 0:
-                    results[test][node][uc].append(value)
-            text_file.close()
+                    continue
     if mytest == "":
         return results
     elif mytest in results.keys():
@@ -90,7 +86,7 @@ def output_by_test(mytest = ""):
 
 def print_results(results, output="plain"):
     if output == "csv":
-        print "node uc0 uc1 uc2 uc3"
+        print "node "+ " ".join(usecases)
     for k1 in results.keys():
         for k2 in results[k1].keys():
             s = ""
@@ -103,8 +99,8 @@ def print_results(results, output="plain"):
                 print k2 + " " + s
 
 #print_results(output_by_test())
-print_results(output_by_test("GET / "), "csv")
+#print_results(output_by_test("GET / "), "csv")
 #print_results(output_by_test("GET /nanoProvider.php "), "csv")
 #print_results(output_by_test("GET /photos/hash "), "csv")
 #print_results(output_by_test("POST test_img.png "), "csv")
-#print_results(output_by_test("GET /thumbs/hash "), "csv")
+print_results(output_by_test("GET /thumbs/hash "), "csv")
