@@ -12,3 +12,5 @@ ansible-playbook $BASEDIR/deploy-bench.yml -i $BASEDIR/hosts/uc4
 ansible-playbook $BASEDIR/deploy-bench.yml -i $BASEDIR/hosts/uc5
 ansible-playbook $BASEDIR/deploy-bench.yml -i $BASEDIR/hosts/uc6
 ansible-playbook $BASEDIR/deploy-bench.yml -i $BASEDIR/hosts/uc7
+ansible-playbook $BASEDIR/deploy-bench.yml -i $BASEDIR/hosts/uc8
+ansible-playbook $BASEDIR/deploy-bench.yml -i $BASEDIR/hosts/uc9

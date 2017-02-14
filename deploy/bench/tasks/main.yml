@@ -25,4 +25,4 @@
       chdir: /tmp
   register: bench_output
 
-- local_action: copy content="{{ bench_output.stdout_lines }}" dest="logs/current/{{ logs }}-{{ hostname }}-{{ webui_server }}"
+- local_action: copy content="{{ bench_output.stdout_lines }}" dest="logs/current/{{ logs }}-{{ hostname }}"

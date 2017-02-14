@@ -25,15 +25,15 @@ function upload_delete_img() {
 		 -F "file=@test_img.png" "$WEBUI/photos/"
 	GENHASH=`python read_hash.py`
 	echo -n "GET /thumbs/hash "
-	curl -w "@curl-format2.txt" -o /dev/null -s "$WEBUI/photos/hash/$GENHASH"
-	echo -n "GET /photos/hash "
 	curl -w "@curl-format2.txt" -o /dev/null -s "$WEBUI/thumbs/hash/$GENHASH"
+	echo -n "GET /photos/hash "
+	curl -w "@curl-format2.txt" -o /dev/null -s "$WEBUI/photos/hash/$GENHASH"
 	echo -n "DELETE /photos/hash "
 	curl -w "@curl-format2.txt" -X DELETE -s "$WEBUI/photos/$GENHASH"
 	rm -f test_img.png result.json
 }
 
-run 3 get_frontpage
-run 3 upload_delete_img
+run 2 get_frontpage
+#run 2 upload_delete_img
 
 
