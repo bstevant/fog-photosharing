@@ -39,12 +39,12 @@ function findBestSRV(records, func) {
 	records.forEach(function(i, index, array) {
 		host = i.name.split(".")[0];
 		idx = pref.indexOf(host);
-		if (idx >= 0 && idx < best) {
+		if (idx >= 0 && idx < best_idx) {
 			best_idx = idx;
 			best_record = i
 		}
 		if (index == (array.length-1)) {
-			if (best < 100) {
+			if (best_idx < 100) {
 				func(best_record);
 			}
 		}
