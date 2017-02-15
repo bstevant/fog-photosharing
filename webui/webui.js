@@ -7,20 +7,60 @@ var url = require('url');
 var request = require('request');
 var dns = require('dns');
 var tmp = require('tmp');
+var os = require("os");
 
 var metahub_srv = "bokeh-metahub.service.consul."
 var photohub_srv = "bokeh-photohub-3000.service.consul."
 var thumbhub_srv = "bokeh-thumbhub.service.consul."
 
+
+
+
+
+function findBestSRV(records, func) {
+	preference_table = {
+	"fog8"	: [ "fog8"	, "fog11"	, "g6fog"	, "fog12"	, "fog9a"	,"fog10"],
+	"fog9a"	: [ "fog9a"	, "fog11"	, "fog12"	, "fog8"	, "g6fog"	,"fog10"],
+	"fog10"	: [ "fog10"	, "fog11"	, "fog12"	, "g6fog"	, "fog8"	,"fog9a"],
+	"fog11"	: [ "fog11"	, "fog12"	, "fog8"	, "g6fog"	, "fog9a"	,"fog10"],
+	"fog12"	: [ "fog12"	, "fog11"	, "g6fog"	, "fog8"	, "fog9a"	,"fog10"],
+	"g6fog"	: [ "g6fog"	, "fog8"	, "fog12"	, "fog11"	, "fog9a"	,"fog10"],
+	};
+	
+	myname = os.hostname();
+
+	try{
+		pref = table[myname];
+	} catch (err) {
+		pref = Array();
+	}
+	best_idx = 100;
+	best_record = undefined;
+	records.forEach(function(i, index, array) {
+		host = i.name.split(".")[0];
+		idx = pref.findIndex(host);
+		if (idx >= 0 && idx < best) {
+			best_idx = idx;
+			best_record = i
+		}
+		if (index == (array.length-1)) {
+			if (best < 100) {
+				func(best_record);
+			}
+		}
+	});
+}
+
 function pickupSRV(name, func) {
 	dns.resolveSrv(name, function (err, results) {
 		if (results instanceof Array) {
 			// Pickup a random result from the different resolved names
-			result = results[Math.floor(Math.random()*results.length)];
-			func(result);
+			//result = results[Math.floor(Math.random()*results.length)];
+			//func(result);
+			findBestSRV(results, func)
 		} else {
 			console.log("Error resolving: " + name);
-			func("");
+			//func("");
 		}
 	});
 }
