@@ -29,10 +29,11 @@ function findBestSRV(records, func) {
 	
 	myname = os.hostname();
 
+	pref = Array();
 	try{
-		pref = table[myname];
+		pref = preference_table[myname];
 	} catch (err) {
-		pref = Array();
+		continue;
 	}
 	best_idx = 100;
 	best_record = undefined;
