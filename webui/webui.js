@@ -33,7 +33,6 @@ function findBestSRV(records, func) {
 	try{
 		pref = preference_table[myname];
 	} catch (err) {
-		continue;
 	}
 	best_idx = 100;
 	best_record = undefined;
