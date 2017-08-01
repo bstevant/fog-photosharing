@@ -12,11 +12,14 @@ usecases = [
 #    "uc7",
 #    "uc8",
 #    "uc9",
-    "uc0a",
-    "uc0b",
-    "uc0c",
-    "uc0d"
+#    "uc0a",
+#    "uc0b",
+#    "uc0c",
+#    "uc0d"
 ]
+
+for i in range(0,20):
+    usecase.append("uc1-"+str(i))
 
 nodes = [
     "fog8",
