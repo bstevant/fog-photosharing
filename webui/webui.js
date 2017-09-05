@@ -55,9 +55,9 @@ function pickupSRV(name, func) {
 	dns.resolveSrv(name, function (err, results) {
 		if (results instanceof Array) {
 			// Pickup a random result from the different resolved names
-			//result = results[Math.floor(Math.random()*results.length)];
-			//func(result);
-			findBestSRV(results, func)
+			result = results[Math.floor(Math.random()*results.length)];
+			func(result);
+			//findBestSRV(results, func)
 		} else {
 			console.log("Error resolving: " + name);
 			//func("");
