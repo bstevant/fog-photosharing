@@ -12,4 +12,4 @@ COPY files ./files/
 
 EXPOSE 8080
 
-CMD node webui.js
+ENTRYPOINT ["node", "webui.js"]

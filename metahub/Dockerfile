@@ -8,4 +8,4 @@ COPY run-metahub.sh ./
 
 EXPOSE 5000
 
-CMD ["/bin/sh", "/metahub/run-metahub.sh"]
+ENTRYPOINT ["/bin/sh", "/metahub/run-metahub.sh"]

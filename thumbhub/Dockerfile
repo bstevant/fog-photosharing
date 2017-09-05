@@ -11,4 +11,4 @@ COPY app.js common.js thumbhub.js ./
 
 EXPOSE 3050
 
-CMD node app.js
+ENTRYPOINT ["node", "app.js"]

@@ -1,3 +1,4 @@
 #!/bin/sh
-echo "fdd7:d924:3d5f:d0c4::1 docker-host" >> /etc/hosts
-python /metahub/metahub.py docker-host 8500
+IP=`cat /etc/resolv.conf | grep nameserver | cut -d ' ' -f2`
+echo $IP "consul-host" >> /etc/hosts
+python /metahub/metahub.py consul-host 8500

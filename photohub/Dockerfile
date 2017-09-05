@@ -16,4 +16,4 @@ COPY app.js common.js photohub.js run-photohub.sh ./
 EXPOSE 3000
 EXPOSE 4001
 
-CMD ./run-photohub.sh
+ENTRYPOINT ["./run-photohub.sh"]
