@@ -128,6 +128,7 @@ module.exports = function(config){
 
 		form.on('file', function(name, file){
 			var type = mime.contentType(file.originalFilename) || 'application/octet-stream';
+			console.log("Got POST request for " + file.path + " with type " + type);
 			ipfs.util.addFromFs(file.path, {recursive: false}, function(err, r) {
 				if (err) {
 					console.log("Error adding file: " + err);
