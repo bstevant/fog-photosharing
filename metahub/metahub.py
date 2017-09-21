@@ -178,6 +178,13 @@ def delete_photo(hash):
 
 
 ####################################################################
+# Route GET /test/
+# Returns empty array
+@app.route('/test', methods=['GET'])
+def test_api():
+    return list_photos()
+
+####################################################################
 ####################################################################
 
 myhelp="""Metahub (consul based)
