@@ -74,6 +74,29 @@ module.exports = function(config){
 	common = require('./common')(config);
 
 //	app.get(/.+\.(jpg|bmp|jpeg|gif|png|tif)$/i, function(req, res, next){
+	
+	app.get('/test', function(req, res, next){
+		jimp.read("./test_img.png", function(err1, img) {
+        	if (err1) {
+        		console.log("Cannot read: " + err1);
+        		return common.error(req, res, next, 404, 'File not found', err1);
+        	}
+        	
+			hashPath = staticFiles + "/test_img.png"
+        	img.resize(256, jimp.AUTO);
+        	img.write(hashPath, function(err3, i) {
+        		if (err3) {
+        			console.log("Cannot write final thumb: " + hashPath + " err3: " + err3);
+        			return common.error(req, res, next, 404, 'File not found', err3);
+        		}
+        		console.log("Successfully created thumb: " + hashPath);
+        		fs.unlink(filePath);
+        		fstream = fs.createReadStream(hashPath);
+				return fstream.pipe(res);
+			});
+		});
+	});
+	
 	app.get(/.+$/i, function(req, res, next){ 
 		var hashPath, filePath, fstream;
 		var hash = path.basename(req.path);
