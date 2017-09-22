@@ -76,6 +76,7 @@ module.exports = function(config){
 //	app.get(/.+\.(jpg|bmp|jpeg|gif|png|tif)$/i, function(req, res, next){
 	
 	app.get('/test', function(req, res, next){
+		console.log("Got request for test API");
 		jimp.read("./test_img.png", function(err1, img) {
         	if (err1) {
         		console.log("Cannot read: " + err1);
