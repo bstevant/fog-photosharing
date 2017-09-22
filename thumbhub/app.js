@@ -16,4 +16,4 @@ app.use('/thumbs', require('./thumbhub.js')({
 
 app.listen(port, host);
 host = host || 'localhost';
-console.log('ThumbHub listening on ' + host  + ':' + port);
+console.log('ThumbHub is listening on ' + host  + ':' + port);
