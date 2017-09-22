@@ -94,13 +94,11 @@ module.exports = function(config){
 	        			return common.error(req, res, next, 404, 'File not found', err3);
 	        		}
 	        		console.log("Successfully created thumb: " + hashPath);
-	        		fs.unlink(filePath);
 	        		fstream = fs.createReadStream(hashPath);
 					return fstream.pipe(res);
 				});
 			});
-		}
-
+		} else {
 		console.log("Got request for " + config.urlRoot + req.path);
 		getMetaData(hash, function (e, p, type) {
 			if (e) { 
@@ -147,6 +145,7 @@ module.exports = function(config){
 				}
 			});
 		});	
+	}
 	});
     
 	return app;
