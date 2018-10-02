@@ -1,7 +1,8 @@
 FROM byrnedo/alpine-curl
 
 WORKDIR /
+RUN apk update && apk add --no-cache bash
 
 COPY curl-format.txt ./
 
-CMD ["/bin/sh","-c"]
+ENTRYPOINT ["/bin/sh","-c"]
