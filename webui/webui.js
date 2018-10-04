@@ -323,12 +323,13 @@ app.post("/photos", function (req, res) {
 								console.log("Failed to upload description to Metahub!:" + origName + "Resp: " + resp2);
 								res.writeHead(500);
 								res.end();
+							} else {
+								b = JSON.stringify(body2)
+								console.log("Successfully uploaded description to Metahub: " + b);
+								res.write(b)
+								res.end();
+								return;
 							}
-							b = JSON.stringify(body2)
-							console.log("Successfully uploaded description to Metahub: " + b);
-							res.write(b)
-							res.end();
-							return;
 						});
 					});
 				}
