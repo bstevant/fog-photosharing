@@ -96,7 +96,7 @@ def update_album(uid):
 ####################################################################
 # Route GET /photos/
 # Returns list of photos
-@app.route('/photos', methods=['GET'])
+@app.route('/photos/', methods=['GET'])
 def list_photos():
     results = cdb.getall('photos','hash') 
     if len(results) >= 1:
@@ -112,7 +112,7 @@ def list_photos():
 ####################################################################
 # Route POST /photos/
 # Returns created photo
-@app.route('/photos', methods=['POST'])
+@app.route('/photos/', methods=['POST'])
 def create_photo():
     if not request.json \
     or not 'hash' in request.json \

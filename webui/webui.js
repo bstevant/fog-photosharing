@@ -65,9 +65,10 @@ function pickupSRV(name, func) {
 	});
 }
 
-render_function = function(res, func) {
+render_function = function(req, res, func) {
+	var qosid = req.query.qosid
 	pickupSRV(metahub_srv, function(record) {
-		var myurl = 'http://' + record.name + ':' + record.port + '/photos';
+		var myurl = 'http://' + record.name + ':' + record.port + '/photos/' + "?qosid=" + qosid;
 		console.log("Requesting Metahub: "+url.format(myurl));
 		request({uri: myurl}).on('response', function(response) {
 			var str = '';
@@ -97,9 +98,9 @@ app.get('/', function (req, res) {
 });
 
 // Render div containing list of photos
-app.get('/photos', function (req,res) {
+app.get('/photos/', function (req,res) {
 	console.log("Rendering Photos div");
-	render_function(res, function(r, photos) {
+	render_function(req, res, function(r, photos) {
 		r.render('includes/div_ng1', { title: 'Hey', message: 'Hello there!', photolist: photos});
 	});
 });
@@ -108,7 +109,7 @@ app.get('/photos', function (req,res) {
 app.get('/nanoPhotosProvider.php', function (req,res) {
 	console.log("Rendering Photos JSON");
 	table = new Array();
-	render_function(res, function(r, photos) {
+	render_function(req, res, function(r, photos) {
 		if (photos) {
 			for (var i=0; i<photos.length; i++) {
 				e = new Object();
@@ -159,7 +160,8 @@ app.get(/thumbs\/.+$/i, function(req, res, next){
 //app.get(/thumbs\/.+(\.(png|jpg|bmp|jpeg|gif|tif))$/i, function (req, res) {
 	console.log("Get " + req.path);
 	pickupSRV(thumbhub_srv, function(record) {
-		var myurl = 'http://' + record.name + ':' + record.port + req.path;
+		var qosid = req.query.qosid
+		var myurl = 'http://' + record.name + ':' + record.port + req.path + "?qosid=" + qosid;		
 		console.log("Proxying request to thumbhub: "+url.format(myurl));
 		request({uri: myurl}).on('response', function(response) {
 			response.on('data', function (chunk) { res.write(chunk); });
@@ -186,7 +188,8 @@ app.get(/thumbs\/.+$/i, function(req, res, next){
 app.get(/photos\/hash\/.+$/i, function(req, res, next){
 	console.log("Get " + req.path);
 	pickupSRV(photohub_srv, function(record) {
-		var myurl = 'http://' + record.name + ':' + record.port + req.path;
+		var qosid = req.query.qosid
+		var myurl = 'http://' + record.name + ':' + record.port + req.path + "?qosid=" + qosid;
 		console.log("Proxying request to photohub: " + myurl);
 		request({uri: myurl}).on('response', function(response) {
 			response.on('data', function (chunk) { res.write(chunk); });
@@ -214,8 +217,9 @@ app.get(/photox\/hash\/.+$/i, function(req, res, next){
 	a[1]= 'photos';
 	mypath = a.join('/');
 	var tmpobj = tmp.fileSync();
+	var qosid = req.query.qosid
 	pickupSRV(photohub_srv, function(record) {
-		var myurl = 'http://' + record.name + ':' + record.port + mypath;
+		var myurl = 'http://' + record.name + ':' + record.port + mypath + "?qosid=" + qosid;
 		console.log('Uploading photo from PhotoHub: '+myurl);
 		// Set timout for 42sec
 		request({url: myurl, agentOptions: { timeout: 420000 }})
@@ -239,8 +243,9 @@ app.get(/photox\/hash\/.+$/i, function(req, res, next){
 // Proxy photo delete requests to photohub
 app.delete(/photos\/.+$/i, function(req, res, next){
 	console.log("Delete " + req.path);
+	var qosid = req.query.qosid
 	pickupSRV(metahub_srv, function(record) {
-		var myurl = 'http://' + record.name + ':' + record.port + req.path;
+		var myurl = 'http://' + record.name + ':' + record.port + req.path + "?qosid=" + qosid;
 		console.log("Proxying request to metahub: " + myurl);
 		request({method: 'DELETE', uri: myurl}).on('response', function(response) {
 			response.on('end', function () {
@@ -259,9 +264,10 @@ app.delete(/photos\/.+$/i, function(req, res, next){
 
 
 // Upload a photo
-app.post("/photos", function (req, res) {
+app.post("/photos\/", function (req, res) {
 	var multiparty = require('multiparty');
 	var form = new multiparty.Form();
+	var qosid = req.query.qosid
 	form.on('file', function(name,file){
 		var tempPath = file.path;
 		var origName = file.originalFilename;
@@ -281,7 +287,7 @@ app.post("/photos", function (req, res) {
 			}
 		}
 		pickupSRV(photohub_srv, function(record) {
-			myurl = url.parse("http://bokeh-photohub.service.dc1.consul:3000/photos");
+			myurl = url.parse("http://bokeh-photohub.service.dc1.consul:3000/photos/?qosid=" + qosid);
 			myurl.hostname = record.name;
 			myurl.port = record.port;
 			console.log("Uploading photo to Photohub: http://"+myurl.hostname+":"+myurl.port);
@@ -304,7 +310,7 @@ app.post("/photos", function (req, res) {
 					type = r['type'];
 					console.log("Hash: " + hash);
 					pickupSRV(metahub_srv, function(record) {
-						myurl = url.parse("http://bokeh-metahub.service.dc1.consul:5000/photos");
+						myurl = url.parse("http://bokeh-metahub.service.dc1.consul:5000/photos/?qosid=" + qosid);
 						myurl.hostname = record.name;
 						myurl.port = record.port;
 						console.log("Uploading metadata to Metahub: http://"+myurl.hostname+":"+myurl.port);

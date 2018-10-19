@@ -22,9 +22,9 @@ function pickupSRV(name, cb) {
 	});
 }
 
-function getMetaData(hash, cb) {
+function getMetaData(hash, qosid, cb) {
 	pickupSRV(metahub_srv, function(record) {
-		var myurl = 'http://' + record.name + ':' + record.port + '/photos/' + hash;
+		var myurl = 'http://' + record.name + ':' + record.port + '/photos/' + hash + "?qosid=" + qosid;
 		console.log("Requesting Metahub: "+ myurl);
 		request({uri: myurl}).on('response', function(response) {
 			var str = '';
@@ -48,10 +48,10 @@ function getMetaData(hash, cb) {
 	});
 }
 
-function getPhoto(hash, path, cb) {
+function getPhoto(hash, qosid, path, cb) {
 	pickupSRV(photohub_srv, function(record) {
-		var myurl = 'http://' + record.name + ':' + record.port + '/photos/hash/' + hash;
-		console.log('Uploading photo from PhotoHub: '+myurl);
+		var myurl = 'http://' + record.name + ':' + record.port + '/photos/hash/' + hash + "?qosid=" + qosid;
+		console.log('Downloading photo from PhotoHub: '+myurl);
 		// Set timout for 42sec
 		request({url: myurl, agentOptions: { timeout: 420000 }})
 		.on('error', function(err) {
@@ -77,7 +77,7 @@ module.exports = function(config){
 	app.get(/.+$/i, function(req, res, next){ 
 		var hashPath, filePath, fstream;
 		var hash = path.basename(req.path);
-		
+		var qosid = req.query.qosid
 		if (hash == 'test') {
 			console.log("Got request for test API");
 			jimp.read("./test_img.png", function(err1, img) {
@@ -100,7 +100,7 @@ module.exports = function(config){
 			});
 		} else {
 		console.log("Got request for " + config.urlRoot + req.path);
-		getMetaData(hash, function (e, p, type) {
+		getMetaData(hash, qosid, function (e, p, type) {
 			if (e) { 
 				console.log("Unable to get MIME type on MetaHub");
 				return common.error(req, res, next, 404, 'File not found', err);
@@ -111,7 +111,7 @@ module.exports = function(config){
 				if (true){
 					console.log("Thumb not found: " + hashPath);
 					filePath = staticFiles + "/" + p;
-					getPhoto(hash, filePath, function (err) {
+					getPhoto(hash, qosid, filePath, function (err) {
 						if (err) {
 							console.log("Cannot download: " + err);
 							return common.error(req, res, next, 404, 'File not found', err);
