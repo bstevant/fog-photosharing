@@ -12,9 +12,9 @@
 	},
 	"dependencies": {
 		"ejs": "2.0.8",
-		"express": "4.10.7",
+		"express": ">=4.10.7",
 		"underscore": "1.8.3",
-		"request": "2.75.0",
+		"request": ">=2.75.0",
 		"ipfs-api": ">=9.0.0",
 		"mime-types": ">=2.1.12",
 		"multiparty": "4.1.2"
