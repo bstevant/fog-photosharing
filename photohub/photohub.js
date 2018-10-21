@@ -106,19 +106,18 @@ module.exports = function(config){
 		console.log("Got request for " + config.urlRoot + req.path);
 		var hash = path.parse(req.path).base;
 		
-		ipfs.files.get(hash, function(err, stream) {
-			if (err) {
-				console.log("Error fetching file from IPFS: " + err);
-				res.status(500).send('Error fetching file from IPFS');
-			}
-			stream.on('data', (file) => {
-				console.log("File found on IPFS: " + file.path);
-				file.content.pipe(res);
-			});
+		const stream = ipfs.files.getReadableStream(hash)
+		if (stream == null) {
+			console.log("Error fetching file from IPFS: " + err);
+			res.status(500).send('Error fetching file from IPFS');
+		}
+		stream.on('data', (file) => {
+			console.log("File found on IPFS: " + file.path);
+			file.content.pipe(res);
+		});
 			//stream.on('end', () => {
 			//	res.end();
 			//});
-		});
 	});
 	
 	
