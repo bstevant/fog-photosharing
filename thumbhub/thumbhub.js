@@ -108,7 +108,7 @@ module.exports = function(config){
 			console.log("Got from MetaHub type: " + type);
 			hashPath = staticFiles + "/" + hash + path.extname(p);
 			fs.stat(hashPath, function(err){
-				if (true){
+				if (err){
 					console.log("Thumb not found: " + hashPath);
 					filePath = staticFiles + "/" + p;
 					getPhoto(hash, qosid, filePath, function (err) {
