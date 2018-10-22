@@ -129,7 +129,7 @@ module.exports = function(config){
 									return common.error(req, res, next, 404, 'File not found', err3);
 								}
 								console.log("Successfully created thumb: " + hashPath);
-								fs.unlink(filePath);
+								fs.unlinkSync(filePath);
 								fstream = fs.createReadStream(hashPath);
 								return fstream.pipe(res);
 							});
