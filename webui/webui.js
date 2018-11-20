@@ -14,43 +14,6 @@ var photohub_srv = "bokeh-photohub-3000.service.consul."
 var thumbhub_srv = "bokeh-thumbhub.service.consul."
 
 
-
-
-
-function findBestSRV(records, func) {
-	preference_table = {
-	"fog8"	: [ "fog8"	, "fog11"	, "g6fog"	, "fog12"	, "fog9a"	,"fog10"],
-	"fog9a"	: [ "fog9a"	, "fog11"	, "fog12"	, "fog8"	, "g6fog"	,"fog10"],
-	"fog10"	: [ "fog10"	, "fog11"	, "fog12"	, "g6fog"	, "fog8"	,"fog9a"],
-	"fog11"	: [ "fog11"	, "fog12"	, "fog8"	, "g6fog"	, "fog9a"	,"fog10"],
-	"fog12"	: [ "fog12"	, "fog11"	, "g6fog"	, "fog8"	, "fog9a"	,"fog10"],
-	"g6fog"	: [ "g6fog"	, "fog8"	, "fog12"	, "fog11"	, "fog9a"	,"fog10"],
-	};
-	
-	myname = os.hostname();
-
-	pref = Array();
-	try{
-		pref = preference_table[myname];
-	} catch (err) {
-	}
-	best_idx = 100;
-	best_record = undefined;
-	records.forEach(function(i, index, array) {
-		host = i.name.split(".")[0];
-		idx = pref.indexOf(host);
-		if (idx >= 0 && idx < best_idx) {
-			best_idx = idx;
-			best_record = i
-		}
-		if (index == (array.length-1)) {
-			if (best_idx < 100) {
-				func(best_record);
-			}
-		}
-	});
-}
-
 function pickupSRV(name, func) {
 	dns.resolveSrv(name, function (err, results) {
 		if (results instanceof Array) {
