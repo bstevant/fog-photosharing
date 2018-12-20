@@ -5,4 +5,4 @@ RUN apk update && apk add --no-cache bash bind-tools imagemagick
 
 COPY curl-format.txt ./
 
-ENTRYPOINT ["/bin/sh","-c"]
+CMD ["/bin/sh","-c"]
