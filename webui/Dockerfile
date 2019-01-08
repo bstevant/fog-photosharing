@@ -10,6 +10,6 @@ COPY views ./views/
 COPY files ./files/
 
 
-EXPOSE 8080
+EXPOSE 3080
 
 ENTRYPOINT ["node", "webui.js"]
