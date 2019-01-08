@@ -31,7 +31,7 @@ function getMetaData(hash, qosid, cb) {
 			response.on('data', function (chunk) { str += chunk; });
 			response.on('end', function () {
 				var resp = JSON.parse(str);
-				if (resp) {
+				if (resp['photos']) {
 					myPhoto = resp['photos'][0];
 					type = myPhoto['type'];
 					url = myPhoto['url'];

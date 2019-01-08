@@ -15,7 +15,7 @@
         "express": "4.10.7",
         "underscore": "1.8.3",
         "request": "2.75.0",
-        "jimp": "0.2.27",
+        "jimp": ">=0.2.27",
         "tmp": ">=0.0.29"
     },
     "scripts": {
