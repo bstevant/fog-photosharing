@@ -13,16 +13,20 @@ var metahub_srv = "bokeh-metahub.service.consul."
 var photohub_srv = "bokeh-photohub-4001.service.consul."
 var thumbhub_srv = "bokeh-thumbhub.service.consul."
 
-function pickupSRV(name, func) {
+function pickupSRV(name, res, func) {
 	dns.resolveSrv(name, function (err, results) {
 		if (results instanceof Array) {
 			// Pickup a random result from the different resolved names
 			result = results[Math.floor(Math.random()*results.length)];
 			func(result);
+			//findBestSRV(results, func)
+		} else {
+			console.log("Error resolving: " + name);
+			res.status(500).send("Error resolving: " + name);
+			res.end();
 		}
 	});
 }
-
 
 
 module.exports = function(config){
@@ -47,7 +51,7 @@ module.exports = function(config){
 				console.log("File not found on cache, try to find it on IPFS");
 				var fileName = path.basename(filePath);
 				var myFile = fs.createWriteStream(filePath);
-				pickupSRV(metahub_srv, function(record) {
+				pickupSRV(metahub_srv, res, function(record) {
 					var myurl = url.parse("http://bokeh-metahub.service.consul:5000/photos?url="+fileName);
 					myurl.hostname = record.name;
 					myurl.port = record.port;

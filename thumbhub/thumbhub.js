@@ -12,18 +12,23 @@ var metahub_srv = "bokeh-metahub.service.consul."
 var photohub_srv = "bokeh-photohub-3000.service.consul."
 var thumbhub_srv = "bokeh-thumbhub.service.consul."
 
-function pickupSRV(name, cb) {
+function pickupSRV(name, res, func) {
 	dns.resolveSrv(name, function (err, results) {
 		if (results instanceof Array) {
 			// Pickup a random result from the different resolved names
 			result = results[Math.floor(Math.random()*results.length)];
-			cb(result);
+			func(result);
+			//findBestSRV(results, func)
+		} else {
+			console.log("Error resolving: " + name);
+			res.status(500).send("Error resolving: " + name);
+			res.end();
 		}
 	});
 }
 
 function getMetaData(hash, qosid, cb) {
-	pickupSRV(metahub_srv, function(record) {
+	pickupSRV(metahub_srv, res, function(record) {
 		var myurl = 'http://' + record.name + ':' + record.port + '/photos/' + hash + "?qosid=" + qosid;
 		console.log("Requesting Metahub: "+ myurl);
 		request({uri: myurl}).on('response', function(response) {
@@ -49,7 +54,7 @@ function getMetaData(hash, qosid, cb) {
 }
 
 function getPhoto(hash, qosid, path, cb) {
-	pickupSRV(photohub_srv, function(record) {
+	pickupSRV(photohub_srv, res, function(record) {
 		var myurl = 'http://' + record.name + ':' + record.port + '/photos/hash/' + hash + "?qosid=" + qosid;
 		console.log('Downloading photo from PhotoHub: '+myurl);
 		// Set timout for 42sec
