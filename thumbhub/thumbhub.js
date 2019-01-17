@@ -27,7 +27,7 @@ function pickupSRV(name, res, func) {
 	});
 }
 
-function getMetaData(hash, qosid, cb) {
+function getMetaData(res, hash, qosid, cb) {
 	pickupSRV(metahub_srv, res, function(record) {
 		var myurl = 'http://' + record.name + ':' + record.port + '/photos/' + hash + "?qosid=" + qosid;
 		console.log("Requesting Metahub: "+ myurl);
@@ -53,7 +53,7 @@ function getMetaData(hash, qosid, cb) {
 	});
 }
 
-function getPhoto(hash, qosid, path, cb) {
+function getPhoto(res, hash, qosid, path, cb) {
 	pickupSRV(photohub_srv, res, function(record) {
 		var myurl = 'http://' + record.name + ':' + record.port + '/photos/hash/' + hash + "?qosid=" + qosid;
 		console.log('Downloading photo from PhotoHub: '+myurl);
@@ -105,7 +105,7 @@ module.exports = function(config){
 			});
 		} else {
 		console.log("Got request for " + config.urlRoot + req.path);
-		getMetaData(hash, qosid, function (e, p, type) {
+		getMetaData(res, hash, qosid, function (e, p, type) {
 			if (e) { 
 				console.log("Unable to get MIME type on MetaHub");
 				return common.error(req, res, next, 404, 'File not found', err);
@@ -116,7 +116,7 @@ module.exports = function(config){
 				if (err){
 					console.log("Thumb not found: " + hashPath);
 					filePath = staticFiles + "/" + p;
-					getPhoto(hash, qosid, filePath, function (err) {
+					getPhoto(res, hash, qosid, filePath, function (err) {
 						if (err) {
 							console.log("Cannot download: " + err);
 							return common.error(req, res, next, 404, 'File not found', err);
