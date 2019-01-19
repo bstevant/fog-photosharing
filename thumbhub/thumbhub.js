@@ -108,7 +108,7 @@ module.exports = function(config){
 		getMetaData(res, hash, qosid, function (e, p, type) {
 			if (e) { 
 				console.log("Unable to get MIME type on MetaHub");
-				return common.error(req, res, next, 404, 'File not found', err);
+				return common.error(req, res, next, 404, 'File not found', e);
 			}
 			console.log("Got from MetaHub type: " + type);
 			hashPath = staticFiles + "/" + hash + path.extname(p);
