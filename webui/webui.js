@@ -205,18 +205,26 @@ app.get(/photox\/hash\/.+$/i, function(req, res, next){
 
 
 // Proxy photo delete requests to photohub
-app.delete(/photos\/.+$/i, function(req, res, next){
+app.delete(/photos\/hash\/.+$/i, function(req, res, next){
 	console.log("Delete " + req.path);
 	var qosid = req.query.qosid
 	pickupSRV(metahub_srv, res, function(record) {
 		var myurl = 'http://' + record.name + ':' + record.port + req.path + "?qosid=" + qosid;
 		console.log("Proxying request to metahub: " + myurl);
 		request({method: 'DELETE', uri: myurl}).on('response', function(response) {
-			response.on('end', function () {
-				res.end();
-			});
 			response.on('close', function(){
-				res.end();
+				pickupSRV(photohub_srv, res, function(record) {
+					var myurl = 'http://' + record.name + ':' + record.port + req.path + "?qosid=" + qosid;
+					request({method: 'DELETE', uri: myurl}).on('response', function(response) {
+						response.on('close', function(){
+							res.end();
+						});
+					}).on('error', function(e) {
+						console.log(e.message);
+						res.writeHead(500);
+						res.end();
+					}).end();
+				});
 			});
 		}).on('error', function(e) {
 			console.log(e.message);
@@ -263,7 +271,7 @@ app.post("/photos\/", function (req, res) {
 					return;
 				}
 				console.log("Successfully uploaded photo to Photohub: " + body);
-				var r = null 
+				var r = null
 				try {
 					r = JSON.parse(body);
 				} catch(err) {}
