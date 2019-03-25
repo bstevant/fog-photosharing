@@ -132,7 +132,7 @@ module.exports = function(config){
 		  files.forEach((file) => {
 				ipfs.files.rm('/' + file.path, (err) => {
 					if (err) {
-						console.log("Error deleting file: " + err);
+						console.log("Error deleting file /" + file.path + " " + err);
 						res.writeHead(500);
 						res.end();
 					}
