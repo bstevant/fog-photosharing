@@ -130,7 +130,7 @@ module.exports = function(config){
 		
 		ipfs.get(hash, function (err, files) {
 		  files.forEach((file) => {
-				ipfs.files.rm(file.path, (err) => {
+				ipfs.files.rm('/' + file.path, (err) => {
 					if (err) {
 						console.log("Error deleting file: " + err);
 						res.writeHead(500);
