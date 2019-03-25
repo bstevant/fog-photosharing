@@ -128,16 +128,14 @@ module.exports = function(config){
 		console.log("Delete " + req.path);
 		var hash = path.parse(req.path).base;
 		
-		ipfs.get(hash, function (err, files) {
-		  files.forEach((file) => {
-				ipfs.files.rm('/' + file.path, (err) => {
-					if (err) {
-						console.log("Error deleting file /" + file.path + " " + err);
-						res.writeHead(500);
-						res.end();
-					}
-				})
-		  });
+		ipfs.pin.rm(hash, function (err, pinset) {
+			if (err) {
+				console.log("Error deleting hash " + hash + " " + err);
+				res.writeHead(500);
+				res.end();
+			}
+			ipfs.repo.gc();
+			res.end();
 		});
 	});
 	
