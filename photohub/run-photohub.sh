@@ -5,6 +5,6 @@ then
 	./ipfs init
 fi
 
-./ipfs daemon &
+./ipfs daemon --offline &
 sleep 10
 node app.js

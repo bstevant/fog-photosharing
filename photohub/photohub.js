@@ -124,6 +124,22 @@ module.exports = function(config){
 			//});
 	});
 	
+	app.delete(/hash\/.+$/i, function(req, res, next){
+		console.log("Delete " + req.path);
+		var hash = path.parse(req.path).base;
+		
+		ipfs.get(hash, function (err, files) {
+		  files.forEach((file) => {
+				ipfs.files.rm(file.path, (err) => {
+					if (err) {
+						console.log("Error deleting file: " + err);
+						res.writeHead(500);
+						res.end();
+					}
+				})
+		  });
+		});
+	});
 	
 	app.post("/", function(req, res, next){
 		var multiparty = require('multiparty');
