@@ -215,6 +215,7 @@ app.delete(/photos\/hash\/.+$/i, function(req, res, next){
 			response.on('close', function(){
 				pickupSRV(photohub_srv, res, function(record) {
 					var myurl = 'http://' + record.name + ':' + record.port + req.path + "?qosid=" + qosid;
+					console.log("Proxying request to photohub: " + myurl);
 					request({method: 'DELETE', uri: myurl}).on('response', function(response) {
 						response.on('close', function(){
 							res.end();
