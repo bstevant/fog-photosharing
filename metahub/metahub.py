@@ -168,7 +168,7 @@ def update_photo(hash):
 ####################################################################
 # Route DELETE /photos/<hash>
 # Returns empty array
-@app.route('/photos/<string:hash>', methods=['DELETE'])
+@app.route('/photos/hash/<string:hash>', methods=['DELETE'])
 def delete_photo(hash):
     photo1 = cdb.get('photos', hash, {'hash': '', 'url': '', 'type': '', 'timestamp': '', 'description': ''})
     if photo1['hash'] == '':
