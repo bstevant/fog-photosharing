@@ -128,7 +128,8 @@ module.exports = function(config){
 		console.log("Delete " + req.path);
 		var hash = path.parse(req.path).base;
 		
-		ipfs.pin.rm(hash, function (err, pinset) {
+		try {
+			ipfs.pin.rm(hash, function (err, pinset) {
 			if (err) {
 				console.log("Error deleting hash " + hash + " " + err);
 				res.writeHead(500);
@@ -136,7 +137,12 @@ module.exports = function(config){
 			}
 			ipfs.repo.gc();
 			res.end();
-		});
+			});
+		} catch (error) {
+			console.log("Error deleting hash " + hash + " " + err);
+			res.writeHead(500);
+			res.end();
+		}
 	});
 	
 	app.post("/", function(req, res, next){
