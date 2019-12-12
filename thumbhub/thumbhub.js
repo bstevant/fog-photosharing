@@ -83,7 +83,7 @@ module.exports = function(config){
 		var hashPath, filePath, fstream;
 		var hash = path.basename(req.path);
 		var qosid = req.query.qosid
-		if (hash == 'test') {
+		if ((hash == 'test') || (hash == '')) {
 			console.log("Got request for test API");
 			jimp.read("./test_img.png", function(err1, img) {
 	        	if (err1) {
