@@ -149,7 +149,8 @@ module.exports = function(config){
 		var multiparty = require('multiparty');
 		var form = new multiparty.Form();
 
-		form.on('file', function(name, file){
+		try {
+			form.on('file', function(name, file){
 			var type = mime.contentType(file.originalFilename) || 'application/octet-stream';
 			console.log("Got POST request for " + file.path + " with type " + type);
 			ipfs.util.addFromFs(file.path, {recursive: false}, function(err, r) {
@@ -165,7 +166,12 @@ module.exports = function(config){
 			});
 		});
 		form.parse(req);
-	});
+		} catch (error) {
+			console.log("Error adding file: " + err);
+			res.writeHead(500);
+			res.end();
+		} 
+		});
 
 	return app;
 }
