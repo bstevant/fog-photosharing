@@ -10,6 +10,11 @@ app.use('/photos', require('./photohub.js')({
     title : 'Example Gallery',
 }));
 
+process.on('unhandledRejection', error => {
+  // Will print "unhandledRejection err is not defined"
+  console.log('unhandledRejection', error.message);
+});
+
 app.listen(port, host);
 host = host || 'localhost';
 console.log('PhotoHub listening on ' + host  + ':' + port);
